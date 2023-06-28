@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module Turtle.Movement ( ToolSide(..)
                        , refuel
                        , dig, digUp, digDown
@@ -15,10 +17,7 @@ class Refuel a where
 instance Refuel () where 
     refuel = const $ tFuncE "refuel"
 
-instance Refuel Int where 
-    refuel amount = tFunc "refuel" [tStr amount]
-
-instance Refuel Float where
+instance Refuel (TVal Double) where 
     refuel amount = tFunc "refuel" [tStr amount]
 
 data ToolSide = LeftSide | RightSide

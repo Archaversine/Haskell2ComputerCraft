@@ -21,9 +21,9 @@ instance Refuel Float where
     refuel amount = tFunc "refuel" [tStr amount]
 
 class Dig a where 
-    dig     :: a -> Turtle Bool 
-    digUp   :: a -> Turtle Bool 
-    digDown :: a -> Turtle Bool
+    dig     :: a -> Turtle (TVal Bool) 
+    digUp   :: a -> Turtle (TVal Bool) 
+    digDown :: a -> Turtle (TVal Bool)
 
 instance Dig () where 
     dig     = const $ tFuncBoolE "dig"
@@ -35,29 +35,29 @@ instance Dig ToolSide where
     digUp   side = tFuncBool "digUp" [show $ show side]
     digDown side = tFuncBool "digDown" [show $ show side]
 
-detect :: Turtle Bool 
+detect :: Turtle (TVal Bool)
 detect = tFuncBool "detect" []
 
-detectUp :: Turtle Bool 
+detectUp :: Turtle (TVal Bool)
 detectUp = tFuncBool "detectUp" []
 
-detectDown :: Turtle Bool 
+detectDown :: Turtle (TVal Bool)
 detectDown = tFuncBool "detectDown" []
 
-forward :: Turtle Bool 
+forward :: Turtle (TVal Bool)
 forward = tFuncBool "forward" []
 
-back :: Turtle Bool 
+back :: Turtle (TVal Bool)
 back = tFuncBool "back" []
 
-up :: Turtle Bool 
+up :: Turtle (TVal Bool)
 up = tFuncBool "up" []
 
-down :: Turtle Bool 
+down :: Turtle (TVal Bool)
 down = tFuncBool "down" []
 
-turnLeft :: Turtle Bool 
+turnLeft :: Turtle (TVal Bool) 
 turnLeft = tFuncBool "turnLeft" []
 
-turnRight :: Turtle Bool 
+turnRight :: Turtle (TVal Bool) 
 turnRight = tFuncBool "turnRight" []

@@ -4,15 +4,16 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    refuel ()
+    x <- declareLocal "x"
+    y <- defineLocal "y" False
 
-    tWhile detectDown $ do 
-        dig ()
-        digDown () 
-        down 
-        dig () 
-        forward
-        turnLeft
+    setVar x (99 :: Float)
+
+    z <- defineLocal "z" $ (1 :: Float) .+ (1 :: Float) .* x
+
+    tPrint x 
+    tPrint y
+    tPrint z
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

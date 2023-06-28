@@ -1,15 +1,26 @@
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE UndecidableSuperClasses #-}
 
 module Turtle.Types ( Turtle
                     , ToolSide(..)
                     , TString(..)
-                    , TExpr(..)
+                    , TurtleVar(..)
+                    , TVal(..)
+                    , ToTVal(..)
+                    , TNum(..)
                     , leftSide
                     , rightSide
-                    , (.+), (.-), (.*), (./)
                     ) where
 
 import Control.Monad.Writer
+
+import Data.Kind (Constraint)
+import GHC.TypeLits
 
 type Turtle = Writer String
 
@@ -47,40 +58,71 @@ leftSide = Just LeftSide
 rightSide :: Maybe ToolSide
 rightSide = Just RightSide
 
-data TExpr a = TConst a
-             | TAdd (TExpr a) (TExpr a) 
-             | TSub (TExpr a) (TExpr a) 
-             | TMul (TExpr a) (TExpr a) 
-             | TDiv (TExpr a) (TExpr a) 
+newtype TurtleVar = TurtleVar String
 
-instance TString a => TString (TExpr a) where 
-    tStr = evalTExpr
+instance TString TurtleVar where 
+    tStr (TurtleVar s) = s
 
-evalTExpr :: TString a => TExpr a -> String 
-evalTExpr (TConst x) = tStr x
-evalTExpr (TAdd e1 e2) = "(" <> evalTExpr e1 <> " + " <> evalTExpr e2 <> ")"
-evalTExpr (TSub e1 e2) = "(" <> evalTExpr e1 <> " - " <> evalTExpr e2 <> ")"
-evalTExpr (TMul e1 e2) = "(" <> evalTExpr e1 <> " * " <> evalTExpr e2 <> ")"
-evalTExpr (TDiv e1 e2) = "(" <> evalTExpr e1 <> " / " <> evalTExpr e2 <> ")"
+class ToTVal a b | a -> b where 
+    toTVal :: a -> TVal b
 
-(.+) :: TString a => a -> a -> TExpr a
-a .+ b = TAdd (TConst a) (TConst b)
+instance ToTVal Float Float where 
+    toTVal = TFloat . show
 
-(.-) :: TString a => a -> a -> TExpr a
-a .- b = TSub (TConst a) (TConst b)
+instance ToTVal Bool Bool where 
+    toTVal True = TBool "true"
+    toTVal False = TBool "false"
 
-(.*) :: TString a => a -> a -> TExpr a
-a .* b = TMul (TConst a) (TConst b)
+instance ToTVal String String where 
+    toTVal = TStr
 
-(./) :: TString a => a -> a -> TExpr a
-a ./ b = TDiv (TConst a) (TConst b)
+instance ToTVal TurtleVar TurtleVar where 
+    toTVal (TurtleVar name) = TTVar name
 
-infixl 6 .+ 
-infixl 6 .- 
+instance ToTVal (TVal a) a where 
+    toTVal = id
+
+data TVal a where 
+    TFloat :: String -> TVal Float
+    TBool  :: String -> TVal Bool
+    TStr   :: String -> TVal String
+    TTVar  :: String -> TVal TurtleVar
+
+instance TString (TVal a) where 
+    tStr (TFloat x) = x
+    tStr (TBool x)  = x
+    tStr (TStr x)   = show x
+    tStr (TTVar x)  = x
+
+type family NotString a :: Constraint where 
+    NotString String = TypeError ('Text "Type cannot be a String")
+    NotString _      = ()
+
+class (NotString a, NotString b) => TNum a b c | a b -> c where 
+    tAdd :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    tSub :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    tMul :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    tDiv :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+
+    (.+) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    (.+) = tAdd
+
+    (.-) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    (.-) = tSub
+
+    (.*) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    (.*) = tMul
+
+    (./) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+    (./) = tDiv
+
+infixl 6 .+
+infixl 6 .-
 infixl 7 .*
 infixl 7 ./
 
-infixl 6 `TAdd`
-infixl 6 `TSub`
-infixl 7 `TMul`
-infixl 7 `TDiv`
+instance (NotString a, NotString b) => TNum a b Float where 
+    tAdd a b = TFloat $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
+    tSub a b = TFloat $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
+    tMul a b = TFloat $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
+    tDiv a b = TFloat $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"

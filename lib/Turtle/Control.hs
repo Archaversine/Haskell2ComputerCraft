@@ -12,7 +12,7 @@ import Data.List (intercalate)
 
 import Turtle.Types
 
-tWhile :: Turtle Bool -> Turtle a -> Turtle () 
+tWhile :: Turtle (TVal Bool) -> Turtle a -> Turtle () 
 tWhile cond code = do 
     tell "while " >> cond >> tell "do\n"
     void code
@@ -23,10 +23,10 @@ tFunc :: String -> [String] -> Turtle ()
 tFunc name = lFunc ("turtle." <> name)
 
 -- Returns True just to satisfy the type checker
-tFuncBool :: String -> [String] -> Turtle Bool
-tFuncBool name params = tFunc name params >> return True
+tFuncBool :: String -> [String] -> Turtle (TVal Bool)
+tFuncBool name params = tFunc name params >> return (TBool "true")
 
-tFuncBoolE :: String -> Turtle Bool
+tFuncBoolE :: String -> Turtle (TVal Bool)
 tFuncBoolE name = tFuncBool name []
 
 -- Lua Function

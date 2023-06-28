@@ -1,5 +1,6 @@
-module Turtle.Var ( TurtleVar(..)
-                  , declareLocal
+{-# LANGUAGE GADTs #-}
+
+module Turtle.Var ( declareLocal
                   , defineLocal
                   , setVar
                   ) where
@@ -8,20 +9,15 @@ import Control.Monad.Writer
 
 import Turtle.Types
 
-newtype TurtleVar = TurtleVar String
-
-instance TString TurtleVar where 
-    tStr (TurtleVar s) = s
-
-declareLocal :: String -> Turtle TurtleVar
+declareLocal :: String -> Turtle (TVal TurtleVar)
 declareLocal name = do 
     tell $ "local " <> name <> "\n"
-    return $ TurtleVar name
+    return $ TTVar name
 
-defineLocal :: TString a => String -> a -> Turtle TurtleVar
+defineLocal :: ToTVal a b => String -> a -> Turtle (TVal TurtleVar)
 defineLocal name value = do 
-    tell $ "local " <> name <> " = " <> tStr value <> "\n"
-    return $ TurtleVar name
+    tell $ "local " <> name <> " = " <> tStr (toTVal value) <> "\n"
+    return $ TTVar name
 
-setVar :: TString a => TurtleVar -> a -> Turtle ()
-setVar (TurtleVar name) value = tell $ name <> " = " <> tStr value <> "\n"
+setVar :: ToTVal a b => TVal TurtleVar -> a -> Turtle ()
+setVar (TTVar name) value = tell $ name <> " = " <> tStr (toTVal value) <> "\n"

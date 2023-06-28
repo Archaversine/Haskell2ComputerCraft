@@ -1,6 +1,7 @@
 module Turtle.Control ( tWhile
                       , tFunc
                       , tFuncBool 
+                      , tFuncBoolE
                       , lFunc
                       ) where 
 
@@ -24,6 +25,9 @@ tFunc name = lFunc ("turtle." <> name)
 -- Returns True just to satisfy the type checker
 tFuncBool :: String -> [String] -> Turtle Bool
 tFuncBool name params = tFunc name params >> return True
+
+tFuncBoolE :: String -> Turtle Bool
+tFuncBoolE name = tFuncBool name []
 
 -- Lua Function
 lFunc :: String -> [String] -> Turtle ()

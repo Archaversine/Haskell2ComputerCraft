@@ -4,13 +4,13 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    refuel Nothing
+    refuel ()
 
     tWhile detectDown $ do 
-        dig Nothing 
-        digDown Nothing 
+        dig ()
+        digDown () 
         down 
-        dig Nothing 
+        dig () 
         forward
         turnLeft
 

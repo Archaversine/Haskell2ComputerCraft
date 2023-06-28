@@ -6,16 +6,11 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    x <- declareLocal "x"
-    y <- defineLocal "y" False
+    first   <- defineLocal "first" "Hello, "
+    second  <- defineLocal "second" "World"
+    message <- defineLocal "message" $ first ... second ... "!"
 
-    setVar x 99.0
-
-    z <- defineLocal "z" $ 1.0 .+ 1.0 .* x
-
-    tPrint x 
-    tPrint y
-    tPrint z
+    tPrint message
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

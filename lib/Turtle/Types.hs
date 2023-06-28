@@ -1,6 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
@@ -13,6 +14,7 @@ module Turtle.Types ( Turtle
                     , TVal(..)
                     , ToTVal(..)
                     , TNum(..)
+                    , (...)
                     , leftSide
                     , rightSide
                     ) where
@@ -82,20 +84,25 @@ instance ToTVal TurtleVar TurtleVar where
 instance ToTVal (TVal a) a where 
     toTVal = id
 
+data StrVar
+
 data TVal a where 
     TDouble :: String -> TVal Double
-    TBool  :: String -> TVal Bool
-    TStr   :: String -> TVal String
-    TTVar  :: String -> TVal TurtleVar
+    TBool   :: String -> TVal Bool
+    TStr    :: String -> TVal String
+    TTVar   :: String -> TVal TurtleVar
+    TStrVar :: String -> TVal StrVar
 
 instance TString (TVal a) where 
     tStr (TDouble x) = x
-    tStr (TBool x)  = x
-    tStr (TStr x)   = show x
-    tStr (TTVar x)  = x
+    tStr (TBool x)   = x
+    tStr (TStr x)    = show x
+    tStr (TTVar x)   = x
+    tStr (TStrVar x) = x
 
 type family NotString a :: Constraint where 
-    NotString String = TypeError ('Text "Type cannot be a String")
+    NotString String = TypeError ('Text "Type cannot be a String or StrVar!")
+    NotString StrVar = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString _      = ()
 
 class (NotString a, NotString b) => TNum a b c | a b -> c where 
@@ -126,3 +133,25 @@ instance (NotString a, NotString b) => TNum a b Double where
     tSub a b = TDouble $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
     tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
     tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
+
+type family TValStringable a :: Constraint where 
+    TValStringable String    = ()
+    TValStringable TurtleVar = ()
+    TValStringable StrVar    = ()
+    TValStringable _         = TypeError ('Text "Type is not a stringable TVal.")
+
+-- String Concatenation
+(...) :: (TValStringable s1, TValStringable s2, ToTVal a s1, ToTVal b s2) => a -> b -> TVal StrVar
+a ... b = TStrVar $ sa <> " .. " <>  sb
+    where sa = case toTVal a of 
+                 (TStr x)    -> show x
+                 (TTVar x)   -> x 
+                 (TStrVar x) -> x
+                 _           -> error "String concatenation received bad type."
+          sb = case toTVal b of 
+                 (TStr x)    -> show x 
+                 (TTVar x)   -> x 
+                 (TStrVar x) -> x
+                 _           -> error "String concatenation received bad type."
+
+infixr 5 ...

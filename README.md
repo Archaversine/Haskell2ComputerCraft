@@ -34,6 +34,17 @@ prog = do
         turnLeft
 ```
 
+And even take advantage of Haskell's syntax:
+
+```haskell
+prog :: Turtle ()
+prog = do 
+    refuel () 
+
+    tWhile detectDown $ do 
+        dig () >> digDown () >> down >> dig () >> forward >> turnLeft
+```
+
 And to translate the lua code and save it to a file:
 
 ```haskell

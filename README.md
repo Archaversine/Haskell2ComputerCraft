@@ -34,7 +34,7 @@ prog = do
         turnLeft
 ```
 
-And even take advantage of Haskell's syntax:
+One can even take advantage of Haskell's syntax:
 
 ```haskell
 prog :: Turtle ()

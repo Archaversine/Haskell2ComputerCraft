@@ -20,8 +20,3 @@ writeProgram prog name = writeFile name text
 tPrint :: TString a => a -> Turtle ()
 tPrint text = lFunc "print" [tStr text]
 
---refuel :: TNum a => Maybe a -> Turtle ()
---refuel Nothing       = tFunc "refuel" []
---refuel (Just amount) = tFunc "refuel" [show amount]
-
-

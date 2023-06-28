@@ -8,7 +8,7 @@ prog :: Turtle ()
 prog = do 
     refuel () 
 
-    tWhile detectDown $ do 
+    tWhile (pure True) $ do 
         dig () >> digDown () >> down >> dig () >> forward >> turnLeft
 
 main :: IO ()

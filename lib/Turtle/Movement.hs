@@ -1,4 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Turtle.Movement ( ToolSide(..)
                        , refuel
@@ -14,11 +16,11 @@ import Turtle.Types
 class Refuel a where 
     refuel :: a -> Turtle ()
 
-instance Refuel () where 
+instance {-# OVERLAPS #-} Refuel () where 
     refuel = const $ tFuncE "refuel"
 
-instance Refuel (TVal Double) where 
-    refuel amount = tFunc "refuel" [tStr amount]
+instance ToTVal a Double => Refuel a where 
+    refuel amount = tFunc "refuel" [tStr $ toTVal amount]
 
 data ToolSide = LeftSide | RightSide
 

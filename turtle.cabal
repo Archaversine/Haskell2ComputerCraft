@@ -34,3 +34,4 @@ executable turtle
                        -Wredundant-constraints
                        -fno-warn-redundant-constraints
                        -fno-warn-unused-do-bind
+                       -fno-warn-type-defaults

@@ -1,3 +1,5 @@
+{-# LANGUAGE ExtendedDefaultRules #-}
+
 module Main (main) where
 
 import Turtle
@@ -7,9 +9,9 @@ prog = do
     x <- declareLocal "x"
     y <- defineLocal "y" False
 
-    setVar x (99 :: Float)
+    setVar x 99.0
 
-    z <- defineLocal "z" $ (1 :: Float) .+ (1 :: Float) .* x
+    z <- defineLocal "z" $ 1.0 .+ 1.0 .* x
 
     tPrint x 
     tPrint y

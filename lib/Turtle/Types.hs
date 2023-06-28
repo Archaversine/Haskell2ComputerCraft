@@ -66,8 +66,8 @@ instance TString TurtleVar where
 class ToTVal a b | a -> b where 
     toTVal :: a -> TVal b
 
-instance ToTVal Float Float where 
-    toTVal = TFloat . show
+instance ToTVal Double Double where 
+    toTVal = TDouble . show
 
 instance ToTVal Bool Bool where 
     toTVal True = TBool "true"
@@ -83,13 +83,13 @@ instance ToTVal (TVal a) a where
     toTVal = id
 
 data TVal a where 
-    TFloat :: String -> TVal Float
+    TDouble :: String -> TVal Double
     TBool  :: String -> TVal Bool
     TStr   :: String -> TVal String
     TTVar  :: String -> TVal TurtleVar
 
 instance TString (TVal a) where 
-    tStr (TFloat x) = x
+    tStr (TDouble x) = x
     tStr (TBool x)  = x
     tStr (TStr x)   = show x
     tStr (TTVar x)  = x
@@ -121,8 +121,8 @@ infixl 6 .-
 infixl 7 .*
 infixl 7 ./
 
-instance (NotString a, NotString b) => TNum a b Float where 
-    tAdd a b = TFloat $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
-    tSub a b = TFloat $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
-    tMul a b = TFloat $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
-    tDiv a b = TFloat $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
+instance (NotString a, NotString b) => TNum a b Double where 
+    tAdd a b = TDouble $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
+    tSub a b = TDouble $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
+    tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
+    tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"

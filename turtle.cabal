@@ -1,0 +1,30 @@
+name:                turtle
+version:             0.1.0.0
+-- synopsis:
+description:         Convert Haskell Code to ComputerCraft Lua Code
+homepage:            https://github.com/githubuser/turtle#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Archaversine
+maintainer:          example@example.com
+copyright:           2023 Archaversine
+category:            Misc
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README.md
+
+executable turtle
+  hs-source-dirs:      src, lib
+  main-is:             Main.hs
+  other-modules:       Turtle, Turtle.Types, Turtle.Control, Turtle.Var
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5, mtl
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Widentities
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wmissing-export-lists
+                       -Wmissing-home-modules
+                       -Wpartial-fields
+                       -Wredundant-constraints

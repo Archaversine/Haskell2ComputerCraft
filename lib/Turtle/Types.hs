@@ -13,6 +13,7 @@ module Turtle.Types ( Turtle
                     , TVal(..)
                     , ToTVal(..)
                     , TNum(..)
+                    , NotString
                     , (...)
                     ) where
 

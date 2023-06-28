@@ -41,8 +41,23 @@ prog :: Turtle ()
 prog = do 
     refuel () 
 
+    -- Define a local variable x
+    x <- defineLocal "x" 0.0
+
+    -- Define a function that digs after a certain action
+    let digAfter a = a >> dig ()
+
+    -- Dig while block is detected under
     tWhile detectDown $ do 
-        dig () >> digDown () >> down >> dig () >> forward >> turnLeft
+        -- Increment x
+        -- Custom operator defined in Turtle.Var
+        x += 1.0
+
+        -- Dig Actions
+        dig () >> digDown () >> digAfter down >> forward >> turnLeft
+
+    -- Print the value of x
+    tPrint x
 ```
 
 And to translate the lua code and save it to a file:

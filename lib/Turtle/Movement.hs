@@ -1,4 +1,5 @@
-module Turtle.Movement ( refuel
+module Turtle.Movement ( ToolSide(..)
+                       , refuel
                        , dig, digUp, digDown
                        , detect, detectUp, detectDown
                        , forward, back, up, down 
@@ -19,6 +20,12 @@ instance Refuel Int where
 
 instance Refuel Float where
     refuel amount = tFunc "refuel" [tStr amount]
+
+data ToolSide = LeftSide | RightSide
+
+instance Show ToolSide where 
+    show LeftSide = "left"
+    show RightSide = "right"
 
 class Dig a where 
     dig     :: a -> Turtle (TVal Bool) 

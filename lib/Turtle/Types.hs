@@ -8,20 +8,17 @@
 {-# LANGUAGE UndecidableSuperClasses #-}
 
 module Turtle.Types ( Turtle
-                    , ToolSide(..)
                     , TString(..)
                     , TurtleVar(..)
                     , TVal(..)
                     , ToTVal(..)
                     , TNum(..)
                     , (...)
-                    , leftSide
-                    , rightSide
                     ) where
 
 import Control.Monad.Writer
 
-import Data.Kind (Constraint)
+import Data.Kind (Type, Constraint)
 import GHC.TypeLits
 
 type Turtle = Writer String
@@ -47,18 +44,6 @@ instance TString Double where
 
 instance TString String where 
     tStr = show
-
-data ToolSide = LeftSide | RightSide
-
-instance Show ToolSide where 
-    show LeftSide = "left"
-    show RightSide = "right"
-
-leftSide :: Maybe ToolSide 
-leftSide = Just LeftSide
-
-rightSide :: Maybe ToolSide
-rightSide = Just RightSide
 
 newtype TurtleVar = TurtleVar String
 
@@ -100,7 +85,7 @@ instance TString (TVal a) where
     tStr (TTVar x)   = x
     tStr (TStrVar x) = x
 
-type family NotString a :: Constraint where 
+type family NotString (a :: Type) :: Constraint where 
     NotString String = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString StrVar = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString _      = ()
@@ -134,7 +119,8 @@ instance (NotString a, NotString b) => TNum a b Double where
     tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
     tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
 
-type family TValStringable a :: Constraint where 
+-- Types that can be used as strings
+type family TValStringable (a :: Type) :: Constraint where 
     TValStringable String    = ()
     TValStringable TurtleVar = ()
     TValStringable StrVar    = ()

@@ -1,5 +1,6 @@
 module Turtle.Control ( tWhile
                       , tFunc
+                      , tFuncE
                       , tFuncBool 
                       , tFuncBoolE
                       , lFunc
@@ -22,12 +23,15 @@ tWhile cond code = do
 tFunc :: String -> [String] -> Turtle () 
 tFunc name = lFunc ("turtle." <> name)
 
+tFuncE :: String -> Turtle ()
+tFuncE = flip tFunc []
+
 -- Returns True just to satisfy the type checker
 tFuncBool :: String -> [String] -> Turtle (TVal Bool)
-tFuncBool name params = tFunc name params >> return (TBool "true")
+tFuncBool name params = tFunc name params >> return (toTVal True)
 
 tFuncBoolE :: String -> Turtle (TVal Bool)
-tFuncBoolE name = tFuncBool name []
+tFuncBoolE = flip tFuncBool []
 
 -- Lua Function
 lFunc :: String -> [String] -> Turtle ()

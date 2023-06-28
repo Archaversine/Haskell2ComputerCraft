@@ -13,7 +13,7 @@ class Refuel a where
     refuel :: a -> Turtle ()
 
 instance Refuel () where 
-    refuel = const $ tFunc "refuel" []
+    refuel = const $ tFuncE "refuel"
 
 instance Refuel Int where 
     refuel amount = tFunc "refuel" [tStr amount]
@@ -43,28 +43,28 @@ instance Dig ToolSide where
     digDown side = tFuncBool "digDown" [show $ show side]
 
 detect :: Turtle (TVal Bool)
-detect = tFuncBool "detect" []
+detect = tFuncBoolE "detect"
 
 detectUp :: Turtle (TVal Bool)
-detectUp = tFuncBool "detectUp" []
+detectUp = tFuncBoolE "detectUp"
 
 detectDown :: Turtle (TVal Bool)
-detectDown = tFuncBool "detectDown" []
+detectDown = tFuncBoolE "detectDown"
 
 forward :: Turtle (TVal Bool)
-forward = tFuncBool "forward" []
+forward = tFuncBoolE "forward"
 
 back :: Turtle (TVal Bool)
-back = tFuncBool "back" []
+back = tFuncBoolE "back"
 
 up :: Turtle (TVal Bool)
-up = tFuncBool "up" []
+up = tFuncBoolE "up"
 
 down :: Turtle (TVal Bool)
-down = tFuncBool "down" []
+down = tFuncBoolE "down"
 
 turnLeft :: Turtle (TVal Bool) 
-turnLeft = tFuncBool "turnLeft" []
+turnLeft = tFuncBoolE "turnLeft"
 
 turnRight :: Turtle (TVal Bool) 
-turnRight = tFuncBool "turnRight" []
+turnRight = tFuncBoolE "turnRight"

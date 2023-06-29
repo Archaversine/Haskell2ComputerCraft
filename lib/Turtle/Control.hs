@@ -31,7 +31,7 @@ tWhile :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tWhile cond code = do 
     let condVal = showTVal cond
 
-    tell "while " >> tell condVal >> tell " do\n"
+    tell $ "while " <> condVal <> " do\n"
     void code
     tell "end\n"
 
@@ -66,24 +66,28 @@ tIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIf cond code = do 
     let condVal = showTVal cond
 
-    tell "if " >> tell condVal >> tell " then\n"
+    tell $ "if " <> condVal <> " then\n"
     void code
     tell "end\n"
 
 tIfElse :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIfElse cond code = do 
     let condVal = showTVal cond
-    tell "if " >> tell condVal >> tell " then\n" >> void code
+
+    tell $ "if " <> condVal <> " then\n"
+    void code
 
 tElseIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIf cond code = do 
     let condVal = showTVal cond
-    tell "elseif " >> tell condVal >> tell " then\n" >> void code
+
+    tell $ "elseif " <> condVal <> " then\n" 
+    void code
 
 tElseIfEnd :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIfEnd cond code = do 
     let condVal = showTVal cond 
-    tell "elseif " >> tell condVal >> tell " then\n"
+    tell $ "elseif " <> condVal <> " then\n"
     void code
     tell "end\n"
 

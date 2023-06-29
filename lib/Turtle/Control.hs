@@ -23,7 +23,7 @@ import Data.List (intercalate)
 
 import Turtle.Types
 
-tWhile :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle () 
+tWhile :: TruthyTVal a a' => a -> Turtle _ -> Turtle () 
 tWhile cond code = do 
     let condVal = tStr $ toTVal cond
 
@@ -31,7 +31,7 @@ tWhile cond code = do
     void code
     tell "end\n"
 
-tIf :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIf cond code = do 
     let condVal = tStr $ toTVal cond
 
@@ -39,17 +39,17 @@ tIf cond code = do
     void code
     tell "end\n"
 
-tIfElse :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tIfElse :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIfElse cond code = do 
     let condVal = tStr $ toTVal cond
     tell "if " >> tell condVal >> tell " then\n" >> void code
 
-tElseIf :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tElseIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIf cond code = do 
     let condVal = tStr $ toTVal cond
     tell "elseif " >> tell condVal >> tell " then\n" >> void code
 
-tElseIfEnd :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tElseIfEnd :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIfEnd cond code = do 
     let condVal = tStr $ toTVal cond 
     tell "elseif " >> tell condVal >> tell " then\n"

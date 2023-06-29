@@ -15,7 +15,7 @@ module Turtle.Types ( Turtle
                     , ToTVal(..)
                     , TNum(..)
                     , NotString
-                    , Truthy
+                    , TruthyTVal
                     , (...)
                     , (.==), (~=)
                     ) where

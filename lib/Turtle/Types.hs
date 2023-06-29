@@ -15,7 +15,6 @@ module Turtle.Types ( Turtle
                     , NotString
                     , TruthyTVal
                     , NumericTVal
-                    , StringyTVal
                     , showTVal
                     , tAdd, tSub, tMul, tDiv
                     , (.+), (.-), (.*), (./)
@@ -116,16 +115,6 @@ infixl 6 .-
 infixl 7 .*
 infixl 7 ./
 
--- Types that can be used as strings
-type family TValStringable (a :: *) :: Constraint where 
-    TValStringable String    = ()
-    TValStringable TurtleVar = ()
-    TValStringable StrVar    = ()
-    TValStringable _         = TypeError ('Text "Type is not a stringable TVal.")
-
-type family StringyTVal (a :: *) (b :: *) :: Constraint where 
-    StringyTVal a b = (ToTVal a b, TValStringable b)
-
 -- Types that can be used as booleans
 type family Truthy (a :: *) :: Constraint where 
     Truthy Bool      = ()
@@ -136,7 +125,7 @@ type family TruthyTVal (a :: *) (b :: *) :: Constraint where
     TruthyTVal a b = (ToTVal a b, Truthy b)
 
 -- String Concatenation
-(...) :: (StringyTVal a a', StringyTVal b b') => a -> b -> TVal StrVar
+(...) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal StrVar
 a ... b = TStrVar $ applyTOp ".." a b
 
 infixr 5 ...

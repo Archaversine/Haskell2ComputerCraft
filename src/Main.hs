@@ -6,13 +6,7 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    forFromTo "x" (1.0, 2.0) $ \x -> do 
-        forFromTo "y" (1.0, 2.0) $ \y -> do 
-            tPrint "PAIR"
-            tPrint x 
-            tPrint y
-
-            forBreak
+    tPrint $ 1.0 ... True ... "hi there!" ... "how are you?"
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

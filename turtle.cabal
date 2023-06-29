@@ -20,7 +20,11 @@ executable turtle
                        Turtle.Types, 
                        Turtle.Control, 
                        Turtle.Var,
-                       Turtle.Movement
+                       Turtle.World,
+                       Turtle.World.Fuel,
+                       Turtle.World.Detect,
+                       Turtle.World.Blocks,
+                       Turtle.World.Movement
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5, mtl
   ghc-options:         -Wall

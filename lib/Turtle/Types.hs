@@ -20,6 +20,7 @@ module Turtle.Types ( Turtle
                     , (.+), (.-), (.*), (./)
                     , (...)
                     , (.==), (~=)
+                    , (.>), (.<), (.>=), (.<=)
                     ) where
 
 import Control.Monad.Writer
@@ -149,3 +150,17 @@ a ~= b = TBool $ applyTOp "~=" a b
 
 infix 4 .==
 infix 4 ~=
+
+-- Comparison operations
+
+(.>) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+a .> b = TBool $ applyTOp ">" a b
+
+(.<) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+a .< b = TBool $ applyTOp "<" a b
+
+(.>=) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+a .>= b = TBool $ applyTOp ">=" a b
+
+(.<=) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+a .<= b = TBool $ applyTOp "<=" a b

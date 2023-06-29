@@ -105,6 +105,9 @@ type family TValStringable (a :: *) :: Constraint where
     TValStringable StrVar    = ()
     TValStringable _         = TypeError ('Text "Type is not a stringable TVal.")
 
+type family StringyTVal (a :: *) (b :: *) :: Constraint where 
+    StringyTVal a b = (ToTVal a b, TValStringable b)
+
 -- Types that can be used as booleans
 type family Truthy (a :: *) :: Constraint where 
     Truthy Bool      = ()
@@ -115,18 +118,8 @@ type family TruthyTVal (a :: *) (b :: *) :: Constraint where
     TruthyTVal a b = (ToTVal a b, Truthy b)
 
 -- String Concatenation
-(...) :: (TValStringable s1, TValStringable s2, ToTVal a s1, ToTVal b s2) => a -> b -> TVal StrVar
-a ... b = TStrVar $ sa <> " .. " <>  sb
-    where sa = case toTVal a of 
-                 (TStr x)    -> show x
-                 (TTVar x)   -> x 
-                 (TStrVar x) -> x
-                 _           -> error "String concatenation received bad type."
-          sb = case toTVal b of 
-                 (TStr x)    -> show x 
-                 (TTVar x)   -> x 
-                 (TStrVar x) -> x
-                 _           -> error "String concatenation received bad type."
+(...) :: (StringyTVal a a', StringyTVal b b') => a -> b -> TVal StrVar
+a ... b = TStrVar $ tStr (toTVal a) <> " .. " <> tStr (toTVal b)
 
 infixr 5 ...
 

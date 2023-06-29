@@ -13,9 +13,11 @@ module Turtle.Types ( tStr
                     , TurtleVar(..)
                     , TVal(..)
                     , ToTVal(..)
-                    , TNum(..)
                     , NotString
                     , TruthyTVal
+                    , NumericTVal
+                    , tAdd, tSub, tMul, tDiv
+                    , (.+), (.-), (.*), (./)
                     , (...)
                     , (.==), (~=)
                     ) where
@@ -69,34 +71,42 @@ type family NotString (a :: *) :: Constraint where
     NotString StrVar = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString _      = ()
 
-class (NotString a, NotString b) => TNum a b c | a b -> c where 
-    tAdd :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    tSub :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    tMul :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    tDiv :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
+type family TNum (a :: *) :: Constraint where 
+    TNum Double    = () 
+    TNum TurtleVar = () 
+    TNum _         = TypeError ('Text "Type must be a TNum type")
 
-    (.+) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    (.+) = tAdd
+type family NumericTVal (a :: *) (b :: *) :: Constraint where 
+    NumericTVal a b = (ToTVal a b, TNum b)
 
-    (.-) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    (.-) = tSub
+tAdd :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tAdd a b = TDouble $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
 
-    (.*) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    (.*) = tMul
+tSub :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tSub a b = TDouble $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
 
-    (./) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal c
-    (./) = tDiv
+tMul :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
+
+tDiv :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
+
+(.+) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.+) = tAdd
+
+(.-) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.-) = tSub
+
+(.*) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.*) = tMul
+
+(./) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(./) = tDiv
 
 infixl 6 .+
 infixl 6 .-
 infixl 7 .*
 infixl 7 ./
-
-instance (NotString a, NotString b) => TNum a b Double where 
-    tAdd a b = TDouble $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
-    tSub a b = TDouble $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
-    tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
-    tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
 
 -- Types that can be used as strings
 type family TValStringable (a :: *) :: Constraint where 

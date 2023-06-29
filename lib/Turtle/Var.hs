@@ -24,17 +24,17 @@ defineLocal name value = do
 setVar :: ToTVal a b => TVal TurtleVar -> a -> Turtle ()
 setVar (TTVar name) value = tell $ name <> " = " <> tStr (toTVal value) <> "\n"
 
-(+=) :: (NotString a, ToTVal a a') => TVal TurtleVar -> a -> Turtle ()
+(+=) :: NumericTVal a a' => TVal TurtleVar -> a -> Turtle ()
 x += value = setVar x $ x .+ value
 
-(-=) :: (NotString a, ToTVal a a') => TVal TurtleVar -> a -> Turtle ()
+(-=) :: NumericTVal a a' => TVal TurtleVar -> a -> Turtle ()
 x -= value = setVar x $ x .- value
 
-(*=) :: (NotString a, ToTVal a a') => TVal TurtleVar -> a -> Turtle ()
+(*=) :: NumericTVal a a' => TVal TurtleVar -> a -> Turtle ()
 x *= value = setVar x $ x .* value
 
 -- Using //= instead of /= to not conflict with Prelude./=
-(//=) :: (NotString a, ToTVal a a') => TVal TurtleVar -> a -> Turtle ()
+(//=) :: NumericTVal a a' => TVal TurtleVar -> a -> Turtle ()
 x //= value = setVar x $ x ./ value
 
 infixr 0 += 

@@ -17,7 +17,7 @@ module Turtle.Types ( Turtle
                     , NumericTVal
                     , showTVal
                     , tAdd, tSub, tMul, tDiv
-                    , (.+), (.-), (.*), (./)
+                    , (.+), (.-), (.*), (./), (%)
                     , (...)
                     , (.==), (~=)
                     , (.>), (.<), (.>=), (.<=)
@@ -113,6 +113,9 @@ tDiv a b = TDouble $ applyTOp "/" a b
 
 (./) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
 (./) = tDiv
+
+(%) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+a % b = TDouble $ applyTOp "%" a b
 
 infixl 6 .+
 infixl 6 .-

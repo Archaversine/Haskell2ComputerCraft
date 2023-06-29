@@ -34,7 +34,9 @@ prog = do
         turnLeftM
 ```
 
-Another example with local variables:
+### Local Variables
+
+Local variables are treated as binding monadic actions.
 
 ```haskell
 prog :: Turtle ()
@@ -59,6 +61,42 @@ prog = do
     -- Print the value of x
     tPrint x
 ```
+
+### Control Flow
+
+An example using if else, for loops, while loops, and functions:
+
+```haskell 
+-- Function to add two numbers together
+add a b = a .+ b
+
+prog :: Turtle ()
+prog = do 
+    x <- defineLocal "x" 5.0
+
+    tIfElse (x % 2.0 .== 0.0) $ do 
+        tPrint "X is even!"
+    tElse $ do 
+        tPrint "X is odd!"
+
+    mySum <- defineLocal "sum" 0.0
+
+    forFromToStep "i" (1.0, 10.0, 1.0) $ \i -> do 
+        mySum += i
+
+    tWhile (mySum .> 0.0) $ do 
+        mySum -= 1.0
+        tPrint "Removed 1!"
+
+    y <- defineLocal "y" 1.0 
+    z <- defineLocal "z" 1.0
+
+    result <- defineLocal "result" $ add y z
+
+    tPrint result
+```
+
+### Translating to Lua
 
 And to translate the lua code and save it to a file:
 

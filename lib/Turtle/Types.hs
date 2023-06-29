@@ -82,17 +82,20 @@ type family TNum (a :: *) :: Constraint where
 type family NumericTVal (a :: *) (b :: *) :: Constraint where 
     NumericTVal a b = (ToTVal a b, TNum b)
 
+applyTOp :: (ToTVal a a', ToTVal b b') => String -> a -> b -> String
+applyTOp op a b = "(" <> showTVal a <> " " <> op <> " " <> showTVal b <> ")"
+
 tAdd :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tAdd a b = TDouble $ "(" <> showTVal a <> " + " <> showTVal b <> ")"
+tAdd a b = TDouble $ applyTOp "+" a b
 
 tSub :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tSub a b = TDouble $ "(" <> showTVal a <> " - " <> showTVal b <> ")"
+tSub a b = TDouble $ applyTOp "-" a b
 
 tMul :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tMul a b = TDouble $ "(" <> showTVal a <> " * " <> showTVal b <> ")"
+tMul a b = TDouble $ applyTOp "*" a b
 
 tDiv :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tDiv a b = TDouble $ "(" <> showTVal a <> " / " <> showTVal b <> ")"
+tDiv a b = TDouble $ applyTOp "/" a b
 
 (.+) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
 (.+) = tAdd
@@ -132,17 +135,17 @@ type family TruthyTVal (a :: *) (b :: *) :: Constraint where
 
 -- String Concatenation
 (...) :: (StringyTVal a a', StringyTVal b b') => a -> b -> TVal StrVar
-a ... b = TStrVar $ showTVal a <> " .. " <> showTVal b
+a ... b = TStrVar $ applyTOp ".." a b
 
 infixr 5 ...
 
 -- Equality operations
 
 (.==) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
-a .== b = TBool $ "(" <> showTVal a <> " == " <> showTVal b <> ")"
+a .== b = TBool $ applyTOp "==" a b
 
 (~=) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
-a ~= b = TBool $ "(" <> showTVal a <> " ~= " <> showTVal b <> ")"
+a ~= b = TBool $ applyTOp "~=" a b
 
 infix 4 .==
 infix 4 ~=

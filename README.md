@@ -54,8 +54,7 @@ prog = do
         x += 1.0
 
         -- Dig Actions
-        digM () >> digDownM () >> digAfter moveDownM
-        moveForwardM >> turnLeftM
+        digM () >> digDownM () >> digAfter moveDownM >> moveForwardM >> turnLeftM
 
     -- Print the value of x
     tPrint x

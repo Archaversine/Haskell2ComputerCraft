@@ -75,6 +75,10 @@ type family NotString (a :: *) :: Constraint where
     NotString StrVar = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString _      = ()
 
+type family NotBool (a :: *) :: Constraint where 
+    NotBool Bool = TypeError ('Text "Type cannot be a Bool!")
+    NotBool _    = ()
+
 type family TNum (a :: *) :: Constraint where 
     TNum Double    = () 
     TNum TurtleVar = () 
@@ -124,8 +128,11 @@ type family Truthy (a :: *) :: Constraint where
 type family TruthyTVal (a :: *) (b :: *) :: Constraint where 
     TruthyTVal a b = (ToTVal a b, Truthy b)
 
+type family NonBoolTVar (a :: *) (b :: *) :: Constraint where 
+    NonBoolTVar a b = (ToTVal a b, NotBool b)
+
 -- String Concatenation
-(...) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal StrVar
+(...) :: (NonBoolTVar a a', NonBoolTVar b b') => a -> b -> TVal StrVar
 a ... b = TStrVar $ applyTOp ".." a b
 
 infixr 5 ...

@@ -12,5 +12,7 @@ prog = do
             tPrint x 
             tPrint y
 
+            forBreak
+
 main :: IO ()
 main = writeProgram prog "prog.lua"

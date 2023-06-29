@@ -4,6 +4,9 @@
 module Turtle.Control ( tWhile
                       , tIf
                       , tIfElse
+                      , tElseIf
+                      , tElseIfEnd
+                      , tElse
                       , toParams
                       , turtle
                       , callTFunc
@@ -28,22 +31,35 @@ tWhile cond code = do
     void code
     tell "end\n"
 
-tIf :: (Truthy b, ToTVal a b) => Turtle a -> Turtle _ -> Turtle ()
+tIf :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
 tIf cond code = do 
-    condVal <- tStr . toTVal <$> cond
+    let condVal = tStr $ toTVal cond
 
     tell "if " >> tell condVal >> tell " then\n"
     void code
     tell "end\n"
 
-tIfElse :: ToTVal a Bool => Turtle a -> Turtle _ -> Turtle _ -> Turtle () 
-tIfElse cond ifTrue ifFalse = do 
-    condVal <- tStr . toTVal <$> cond
+tIfElse :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tIfElse cond code = do 
+    let condVal = tStr $ toTVal cond
+    tell "if " >> tell condVal >> tell " then\n" >> void code
 
-    tell "if " >> tell condVal >> tell " then\n"
-    void ifTrue
+tElseIf :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tElseIf cond code = do 
+    let condVal = tStr $ toTVal cond
+    tell "elseif " >> tell condVal >> tell " then\n" >> void code
+
+tElseIfEnd :: (Truthy b, ToTVal a b) => a -> Turtle _ -> Turtle ()
+tElseIfEnd cond code = do 
+    let condVal = tStr $ toTVal cond 
+    tell "elseif " >> tell condVal >> tell " then\n"
+    void code
+    tell "end\n"
+
+tElse :: Turtle _ -> Turtle ()
+tElse code = do 
     tell "else\n"
-    void ifFalse
+    void code
     tell "end\n"
 
 toParams :: [String] -> String

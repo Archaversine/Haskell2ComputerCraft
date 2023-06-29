@@ -6,26 +6,16 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    refuel () 
 
-    -- Define a local variable x
-    x <- defineLocal "x" 0.0
+    tIf True $ do 
+        tPrint "Hello, World!"
 
-    -- Define a function that digs after a certain action
-    let digAfter a = a >> digM ()
-
-    -- Dig while block is detected under
-    tWhile detectDown $ do 
-        -- Increment x
-        -- Custom operator defined in Turtle.Var
-        x += 1.0
-
-        -- Dig Actions
-        digM () >> digDownM () >> digAfter moveDownM
-        moveForwardM >> turnLeftM
-
-    -- Print the value of x
-    tPrint x
+    tIfElse True $ do 
+        tPrint "Hello, World!"
+    tElseIf False $ do 
+        tPrint "Goodbye, World!"
+    tElse $ do 
+        tPrint "Something happened"
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

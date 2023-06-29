@@ -8,8 +8,8 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE UndecidableSuperClasses #-}
 
-module Turtle.Types ( Turtle
-                    , TString(..)
+module Turtle.Types ( tStr 
+                    , Turtle
                     , TurtleVar(..)
                     , TVal(..)
                     , ToTVal(..)
@@ -27,32 +27,7 @@ import GHC.TypeLits
 
 type Turtle = Writer String
 
-class TString a where 
-    tStr :: a -> String
-
-instance TString Bool where 
-    tStr True = "true"
-    tStr False = "false"
-
-instance TString Int where 
-    tStr = show
-
-instance TString Integer where 
-    tStr = show
-
-instance TString Float where 
-    tStr = show
-
-instance TString Double where 
-    tStr = show
-
-instance TString String where 
-    tStr = show
-
 newtype TurtleVar = TurtleVar String
-
-instance TString TurtleVar where 
-    tStr (TurtleVar s) = s
 
 class ToTVal a b | a -> b where 
     toTVal :: a -> TVal b
@@ -82,12 +57,12 @@ data TVal a where
     TTVar   :: String -> TVal TurtleVar
     TStrVar :: String -> TVal StrVar
 
-instance TString (TVal a) where 
-    tStr (TDouble x) = x
-    tStr (TBool x)   = x
-    tStr (TStr x)    = show x
-    tStr (TTVar x)   = x
-    tStr (TStrVar x) = x
+tStr :: TVal a -> String 
+tStr (TDouble x) = x
+tStr (TBool x)   = x
+tStr (TStr x)    = show x
+tStr (TTVar x)   = x
+tStr (TStrVar x) = x
 
 type family NotString (a :: *) :: Constraint where 
     NotString String = TypeError ('Text "Type cannot be a String or StrVar!")

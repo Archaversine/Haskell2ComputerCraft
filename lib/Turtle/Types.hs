@@ -1,5 +1,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE StarIsType #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -16,11 +17,12 @@ module Turtle.Types ( Turtle
                     , NotString
                     , Truthy
                     , (...)
+                    , (.==), (~=)
                     ) where
 
 import Control.Monad.Writer
 
-import Data.Kind (Type, Constraint)
+import Data.Kind (Constraint)
 import GHC.TypeLits
 
 type Turtle = Writer String
@@ -87,7 +89,7 @@ instance TString (TVal a) where
     tStr (TTVar x)   = x
     tStr (TStrVar x) = x
 
-type family NotString (a :: Type) :: Constraint where 
+type family NotString (a :: *) :: Constraint where 
     NotString String = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString StrVar = TypeError ('Text "Type cannot be a String or StrVar!")
     NotString _      = ()
@@ -122,17 +124,20 @@ instance (NotString a, NotString b) => TNum a b Double where
     tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
 
 -- Types that can be used as strings
-type family TValStringable (a :: Type) :: Constraint where 
+type family TValStringable (a :: *) :: Constraint where 
     TValStringable String    = ()
     TValStringable TurtleVar = ()
     TValStringable StrVar    = ()
     TValStringable _         = TypeError ('Text "Type is not a stringable TVal.")
 
 -- Types that can be used as booleans
-type family Truthy (a :: Type) :: Constraint where 
+type family Truthy (a :: *) :: Constraint where 
     Truthy Bool      = ()
     Truthy TurtleVar = ()
     Truthy _         = TypeError ('Text "Not a Truthy type!")
+
+type family TruthyTVal (a :: *) (b :: *) :: Constraint where 
+    TruthyTVal a b = (ToTVal a b, Truthy b)
 
 -- String Concatenation
 (...) :: (TValStringable s1, TValStringable s2, ToTVal a s1, ToTVal b s2) => a -> b -> TVal StrVar
@@ -149,3 +154,14 @@ a ... b = TStrVar $ sa <> " .. " <>  sb
                  _           -> error "String concatenation received bad type."
 
 infixr 5 ...
+
+-- Equality operations
+
+(.==) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
+a .== b = TBool $ "(" <> tStr (toTVal a) <> " == " <> tStr (toTVal b) <> ")"
+
+(~=) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
+a ~= b = TBool $ "(" <> tStr (toTVal a) <> " ~= " <> tStr (toTVal b) <> ")"
+
+infix 4 .==
+infix 4 ~=

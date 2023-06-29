@@ -7,15 +7,10 @@ import Turtle
 prog :: Turtle ()
 prog = do 
 
-    tIf True $ do 
-        tPrint "Hello, World!"
+    x <- defineLocal "x" 1.0
 
-    tIfElse True $ do 
+    tIf (x .== 1.0) $ do 
         tPrint "Hello, World!"
-    tElseIf False $ do 
-        tPrint "Goodbye, World!"
-    tElse $ do 
-        tPrint "Something happened"
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

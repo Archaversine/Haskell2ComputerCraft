@@ -40,3 +40,4 @@ executable turtle
                        -fno-warn-unused-do-bind
                        -fno-warn-type-defaults
                        -fno-warn-partial-type-signatures
+                       -fno-warn-star-is-type

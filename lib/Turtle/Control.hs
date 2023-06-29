@@ -12,6 +12,9 @@ module Turtle.Control ( tWhile
                       , tElseIf
                       , tElseIfEnd
                       , tElse
+                      , Function
+                      , function 
+                      , funcReturn
                       , toParams
                       , turtle
                       , callTFunc
@@ -100,6 +103,17 @@ tElse code = do
     tell "else\n"
     void code
     tell "end\n"
+
+type Function = [TVal TurtleVar] -> Turtle ()
+
+function :: String -> [String] -> Function -> Turtle ()
+function name params code = do 
+    tell $ "function " <> name <> toParams params <> "\n"
+    void $ code $ map TTVar params
+    tell "end\n"
+
+funcReturn :: ToTVal a a' => a -> Turtle () 
+funcReturn x = tell $ "return " <> showTVal x <> "\n"
 
 toParams :: [String] -> String
 toParams xs = "(" <> intercalate ", " xs <> ")"

@@ -25,7 +25,7 @@ import Turtle.Types
 
 tWhile :: TruthyTVal a a' => a -> Turtle _ -> Turtle () 
 tWhile cond code = do 
-    let condVal = tStr $ toTVal cond
+    let condVal = showTVal cond
 
     tell "while " >> tell condVal >> tell " do\n"
     void code
@@ -33,7 +33,7 @@ tWhile cond code = do
 
 tIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIf cond code = do 
-    let condVal = tStr $ toTVal cond
+    let condVal = showTVal cond
 
     tell "if " >> tell condVal >> tell " then\n"
     void code
@@ -41,17 +41,17 @@ tIf cond code = do
 
 tIfElse :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIfElse cond code = do 
-    let condVal = tStr $ toTVal cond
+    let condVal = showTVal cond
     tell "if " >> tell condVal >> tell " then\n" >> void code
 
 tElseIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIf cond code = do 
-    let condVal = tStr $ toTVal cond
+    let condVal = showTVal cond
     tell "elseif " >> tell condVal >> tell " then\n" >> void code
 
 tElseIfEnd :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tElseIfEnd cond code = do 
-    let condVal = tStr $ toTVal cond 
+    let condVal = showTVal cond 
     tell "elseif " >> tell condVal >> tell " then\n"
     void code
     tell "end\n"
@@ -67,7 +67,7 @@ toParams xs = "(" <> intercalate ", " xs <> ")"
 
 -- Turtle Function
 turtle :: TVal a -> Turtle ()
-turtle f = tell $ tStr f <> "\n"
+turtle f = tell $ show f <> "\n"
 
 callTFunc :: String -> [String] -> Turtle () 
 callTFunc name = callFunc ("turtle." <> name)

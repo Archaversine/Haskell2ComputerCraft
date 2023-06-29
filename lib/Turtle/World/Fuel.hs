@@ -14,4 +14,4 @@ instance {-# OVERLAPS #-} Refuel () where
     refuel = const $ callTFuncE "refuel"
 
 instance ToTVal a Double => Refuel a where 
-    refuel amount = callTFunc "refuel" [tStr $ toTVal amount]
+    refuel amount = callTFunc "refuel" [showTVal amount]

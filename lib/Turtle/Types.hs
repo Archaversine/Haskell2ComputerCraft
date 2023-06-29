@@ -8,14 +8,14 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE UndecidableSuperClasses #-}
 
-module Turtle.Types ( tStr 
-                    , Turtle
+module Turtle.Types ( Turtle
                     , TurtleVar(..)
                     , TVal(..)
                     , ToTVal(..)
                     , NotString
                     , TruthyTVal
                     , NumericTVal
+                    , showTVal
                     , tAdd, tSub, tMul, tDiv
                     , (.+), (.-), (.*), (./)
                     , (...)
@@ -59,12 +59,15 @@ data TVal a where
     TTVar   :: String -> TVal TurtleVar
     TStrVar :: String -> TVal StrVar
 
-tStr :: TVal a -> String 
-tStr (TDouble x) = x
-tStr (TBool x)   = x
-tStr (TStr x)    = show x
-tStr (TTVar x)   = x
-tStr (TStrVar x) = x
+instance Show (TVal a) where 
+    show (TDouble x) = x
+    show (TBool x)   = x
+    show (TStr x)    = show x
+    show (TTVar x)   = x
+    show (TStrVar x) = x
+
+showTVal :: ToTVal a a' => a -> String
+showTVal = show . toTVal
 
 type family NotString (a :: *) :: Constraint where 
     NotString String = TypeError ('Text "Type cannot be a String or StrVar!")
@@ -80,16 +83,16 @@ type family NumericTVal (a :: *) (b :: *) :: Constraint where
     NumericTVal a b = (ToTVal a b, TNum b)
 
 tAdd :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tAdd a b = TDouble $ "(" <> tStr (toTVal a) <> " + " <> tStr (toTVal b) <> ")"
+tAdd a b = TDouble $ "(" <> showTVal a <> " + " <> showTVal b <> ")"
 
 tSub :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tSub a b = TDouble $ "(" <> tStr (toTVal a) <> " - " <> tStr (toTVal b) <> ")"
+tSub a b = TDouble $ "(" <> showTVal a <> " - " <> showTVal b <> ")"
 
 tMul :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tMul a b = TDouble $ "(" <> tStr (toTVal a) <> " * " <> tStr (toTVal b) <> ")"
+tMul a b = TDouble $ "(" <> showTVal a <> " * " <> showTVal b <> ")"
 
 tDiv :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
-tDiv a b = TDouble $ "(" <> tStr (toTVal a) <> " / " <> tStr (toTVal b) <> ")"
+tDiv a b = TDouble $ "(" <> showTVal a <> " / " <> showTVal b <> ")"
 
 (.+) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
 (.+) = tAdd
@@ -129,17 +132,17 @@ type family TruthyTVal (a :: *) (b :: *) :: Constraint where
 
 -- String Concatenation
 (...) :: (StringyTVal a a', StringyTVal b b') => a -> b -> TVal StrVar
-a ... b = TStrVar $ tStr (toTVal a) <> " .. " <> tStr (toTVal b)
+a ... b = TStrVar $ showTVal a <> " .. " <> showTVal b
 
 infixr 5 ...
 
 -- Equality operations
 
 (.==) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
-a .== b = TBool $ "(" <> tStr (toTVal a) <> " == " <> tStr (toTVal b) <> ")"
+a .== b = TBool $ "(" <> showTVal a <> " == " <> showTVal b <> ")"
 
 (~=) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
-a ~= b = TBool $ "(" <> tStr (toTVal a) <> " ~= " <> tStr (toTVal b) <> ")"
+a ~= b = TBool $ "(" <> showTVal a <> " ~= " <> showTVal b <> ")"
 
 infix 4 .==
 infix 4 ~=

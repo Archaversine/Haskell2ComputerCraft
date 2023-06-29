@@ -18,5 +18,5 @@ writeProgram prog name = writeFile name text
     where text = execWriter prog 
 
 tPrint :: ToTVal a a' => a -> Turtle ()
-tPrint text = callFunc "print" [tStr $ toTVal text]
+tPrint text = callFunc "print" [showTVal text]
 

@@ -18,11 +18,11 @@ declareLocal name = do
 
 defineLocal :: ToTVal a b => String -> a -> Turtle (TVal TurtleVar)
 defineLocal name value = do 
-    tell $ "local " <> name <> " = " <> tStr (toTVal value) <> "\n"
+    tell $ "local " <> name <> " = " <> showTVal value <> "\n"
     return $ TTVar name
 
 setVar :: ToTVal a b => TVal TurtleVar -> a -> Turtle ()
-setVar (TTVar name) value = tell $ name <> " = " <> tStr (toTVal value) <> "\n"
+setVar (TTVar name) value = tell $ name <> " = " <> showTVal value <> "\n"
 
 (+=) :: NumericTVal a a' => TVal TurtleVar -> a -> Turtle ()
 x += value = setVar x $ x .+ value

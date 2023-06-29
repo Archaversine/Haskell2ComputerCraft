@@ -15,6 +15,7 @@ module Turtle.Types ( Turtle
                     , NotString
                     , TruthyTVal
                     , NumericTVal
+                    , StringyTVal
                     , showTVal
                     , tAdd, tSub, tMul, tDiv
                     , (.+), (.-), (.*), (./)

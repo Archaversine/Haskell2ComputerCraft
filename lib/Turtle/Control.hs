@@ -1,7 +1,11 @@
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 
 module Turtle.Control ( tWhile
+                      , loopM
+                      , forFromTo
+                      , forFromToStep
                       , tIf
                       , tIfElse
                       , tElseIf
@@ -29,6 +33,33 @@ tWhile cond code = do
 
     tell "while " >> tell condVal >> tell " do\n"
     void code
+    tell "end\n"
+
+loopM :: NumericTVal a a' => a -> Turtle () -> Turtle ()
+loopM n code = do 
+    let amount = showTVal n
+    tell $ "for _=1," <> amount <> " do\n"
+    void code 
+    tell "end\n"
+
+forFromTo :: (NumericTVal a a', NumericTVal b b') => String -> (a, b) -> (TVal TurtleVar -> Turtle ()) -> Turtle ()
+forFromTo var (from, to) code = do 
+    let fromAmount  = showTVal from
+        toAmount    = showTVal to
+
+    tell $ "for " <> var <> "=" <> fromAmount <> "," <> toAmount <> " do\n"   
+    void $ code (TTVar var)
+    tell "end\n"
+
+forFromToStep :: (NumericTVal a a', NumericTVal b b', NumericTVal c c')
+              => String -> (a, b, c) -> (TVal TurtleVar -> Turtle ()) -> Turtle ()
+forFromToStep var (from, to, step) code = do 
+    let fromAmount = showTVal from 
+        toAmount   = showTVal to 
+        stepAmount = showTVal step 
+
+    tell $ "for " <> var <> "=" <> fromAmount <> "," <> toAmount <> "," <> stepAmount <> " do\n"
+    void $ code (TTVar var)
     tell "end\n"
 
 tIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()

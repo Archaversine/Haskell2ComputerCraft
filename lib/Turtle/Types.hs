@@ -14,6 +14,7 @@ module Turtle.Types ( Turtle
                     , ToTVal(..)
                     , TNum(..)
                     , NotString
+                    , Truthy
                     , (...)
                     ) where
 
@@ -126,6 +127,12 @@ type family TValStringable (a :: Type) :: Constraint where
     TValStringable TurtleVar = ()
     TValStringable StrVar    = ()
     TValStringable _         = TypeError ('Text "Type is not a stringable TVal.")
+
+-- Types that can be used as booleans
+type family Truthy (a :: Type) :: Constraint where 
+    Truthy Bool      = ()
+    Truthy TurtleVar = ()
+    Truthy _         = TypeError ('Text "Not a Truthy type!")
 
 -- String Concatenation
 (...) :: (TValStringable s1, TValStringable s2, ToTVal a s1, ToTVal b s2) => a -> b -> TVal StrVar

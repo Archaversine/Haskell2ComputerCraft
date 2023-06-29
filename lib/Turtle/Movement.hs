@@ -3,11 +3,14 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Turtle.Movement ( ToolSide(..)
-                       , refuel
-                       , dig, digUp, digDown
+                       , Refuel(..)
+                       , Dig(..)
                        , detect, detectUp, detectDown
-                       , forward, back, up, down 
+                       , detectM, detectUpM, detectDownM
+                       , moveForward, moveBack, moveUp, moveDown 
+                       , moveForwardM, moveBackM, moveUpM, moveDownM
                        , turnLeft, turnRight
+                       , turnLeftM, turnRightM
                        ) where 
 
 import Turtle.Control
@@ -17,10 +20,10 @@ class Refuel a where
     refuel :: a -> Turtle ()
 
 instance {-# OVERLAPS #-} Refuel () where 
-    refuel = const $ tFuncE "refuel"
+    refuel = const $ callTFuncE "refuel"
 
 instance ToTVal a Double => Refuel a where 
-    refuel amount = tFunc "refuel" [tStr $ toTVal amount]
+    refuel amount = callTFunc "refuel" [tStr $ toTVal amount]
 
 data ToolSide = LeftSide | RightSide
 
@@ -29,43 +32,82 @@ instance Show ToolSide where
     show RightSide = "right"
 
 class Dig a where 
-    dig     :: a -> Turtle (TVal Bool) 
-    digUp   :: a -> Turtle (TVal Bool) 
-    digDown :: a -> Turtle (TVal Bool)
+    dig      :: a -> TVal Bool 
+    digUp    :: a -> TVal Bool 
+    digDown  :: a -> TVal Bool
+
+    digM     :: a -> Turtle ()
+    digUpM   :: a -> Turtle ()
+    digDownM :: a -> Turtle ()
 
 instance Dig () where 
-    dig     = const $ tFuncBoolE "dig"
-    digUp   = const $ tFuncBoolE "digUp"
-    digDown = const $ tFuncBoolE "digDown"
+    dig      = const $ tFuncBoolE "dig"
+    digUp    = const $ tFuncBoolE "digUp"
+    digDown  = const $ tFuncBoolE "digDown"
+
+    digM     = const $ callTFuncE "dig"
+    digUpM   = const $ callTFuncE "digUp"
+    digDownM = const $ callTFuncE "digDown"
 
 instance Dig ToolSide where 
-    dig     side = tFuncBool "dig" [show $ show side]
-    digUp   side = tFuncBool "digUp" [show $ show side]
-    digDown side = tFuncBool "digDown" [show $ show side]
+    dig     side  = tFuncBool "dig" [show $ show side]
+    digUp   side  = tFuncBool "digUp" [show $ show side]
+    digDown side  = tFuncBool "digDown" [show $ show side]
 
-detect :: Turtle (TVal Bool)
+    digM side     = callTFunc "dig" [show $ show side]
+    digUpM side   = callTFunc "digUp" [show $ show side]
+    digDownM side = callTFunc "digDown" [show $ show side]
+
+detect :: TVal Bool
 detect = tFuncBoolE "detect"
 
-detectUp :: Turtle (TVal Bool)
+detectUp :: TVal Bool
 detectUp = tFuncBoolE "detectUp"
 
-detectDown :: Turtle (TVal Bool)
+detectDown :: TVal Bool
 detectDown = tFuncBoolE "detectDown"
 
-forward :: Turtle (TVal Bool)
-forward = tFuncBoolE "forward"
+detectM :: Turtle ()
+detectM = turtle detect
 
-back :: Turtle (TVal Bool)
-back = tFuncBoolE "back"
+detectUpM :: Turtle ()
+detectUpM = turtle detectUp
 
-up :: Turtle (TVal Bool)
-up = tFuncBoolE "up"
+detectDownM :: Turtle ()
+detectDownM = turtle detectDown
 
-down :: Turtle (TVal Bool)
-down = tFuncBoolE "down"
+moveForward :: TVal Bool
+moveForward = tFuncBoolE "forward"
 
-turnLeft :: Turtle (TVal Bool) 
+moveBack :: TVal Bool
+moveBack = tFuncBoolE "back"
+
+moveUp :: TVal Bool
+moveUp = tFuncBoolE "up"
+
+moveDown :: TVal Bool
+moveDown = tFuncBoolE "down"
+
+moveForwardM :: Turtle ()
+moveForwardM = callTFuncE "forward"
+
+moveBackM :: Turtle ()
+moveBackM = callTFuncE "back"
+
+moveUpM :: Turtle ()
+moveUpM = callTFuncE "up"
+
+moveDownM :: Turtle () 
+moveDownM = callTFuncE "down"
+
+turnLeft :: TVal Bool
 turnLeft = tFuncBoolE "turnLeft"
 
-turnRight :: Turtle (TVal Bool) 
+turnRight :: TVal Bool
 turnRight = tFuncBoolE "turnRight"
+
+turnLeftM :: Turtle ()
+turnLeftM = turtle turnLeft
+
+turnRightM :: Turtle ()
+turnRightM = turtle turnRight

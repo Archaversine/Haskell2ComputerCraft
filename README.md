@@ -26,12 +26,12 @@ prog = do
     refuel ()
 
     tWhile detectDown $ do 
-        dig ()
-        digDown () 
-        down 
-        dig () 
-        forward
-        turnLeft
+        digM ()
+        digDownM () 
+        moveDownM 
+        digM () 
+        moveForwardM
+        turnLeftM
 ```
 
 Another example with local variables:
@@ -45,7 +45,7 @@ prog = do
     x <- defineLocal "x" 0.0
 
     -- Define a function that digs after a certain action
-    let digAfter a = a >> dig ()
+    let digAfter a = a >> digM ()
 
     -- Dig while block is detected under
     tWhile detectDown $ do 
@@ -54,7 +54,8 @@ prog = do
         x += 1.0
 
         -- Dig Actions
-        dig () >> digDown () >> digAfter down >> forward >> turnLeft
+        digM () >> digDownM () >> digAfter moveDownM
+        moveForwardM >> turnLeftM
 
     -- Print the value of x
     tPrint x

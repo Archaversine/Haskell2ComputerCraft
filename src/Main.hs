@@ -12,15 +12,17 @@ prog = do
     x <- defineLocal "x" 0.0
 
     -- Define a function that digs after a certain action
-    let digAfter a = a >> dig ()
+    let digAfter a = a >> digM ()
 
     -- Dig while block is detected under
     tWhile detectDown $ do 
         -- Increment x
+        -- Custom operator defined in Turtle.Var
         x += 1.0
 
         -- Dig Actions
-        dig () >> digDown () >> digAfter down >> forward >> turnLeft
+        digM () >> digDownM () >> digAfter moveDownM
+        moveForwardM >> turnLeftM
 
     -- Print the value of x
     tPrint x

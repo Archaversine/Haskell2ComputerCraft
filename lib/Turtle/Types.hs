@@ -131,11 +131,11 @@ type family Truthy (a :: *) :: Constraint where
 type family TruthyTVal (a :: *) (b :: *) :: Constraint where 
     TruthyTVal a b = (ToTVal a b, Truthy b)
 
-type family NonBoolTVar (a :: *) (b :: *) :: Constraint where 
-    NonBoolTVar a b = (ToTVal a b, NotBool b)
+type family NonBoolTVal (a :: *) (b :: *) :: Constraint where 
+    NonBoolTVal a b = (ToTVal a b, NotBool b)
 
 -- String Concatenation
-(...) :: (NonBoolTVar a a', NonBoolTVar b b') => a -> b -> TVal StrVar
+(...) :: (NonBoolTVal a a', NonBoolTVal b b') => a -> b -> TVal StrVar
 a ... b = TStrVar $ applyTOp ".." a b
 
 infixr 5 ...

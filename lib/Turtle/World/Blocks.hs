@@ -15,23 +15,21 @@ class Dig a where
     digDown  :: a -> TVal Bool
 
     digM     :: a -> Turtle ()
+    digM     = turtle . dig
+
     digUpM   :: a -> Turtle ()
+    digUpM   = turtle . digUp
+
     digDownM :: a -> Turtle ()
+    digDownM = turtle . digDown
 
 instance Dig () where 
     dig      = const $ tFuncBoolE "dig"
     digUp    = const $ tFuncBoolE "digUp"
     digDown  = const $ tFuncBoolE "digDown"
 
-    digM     = const $ callTFuncE "dig"
-    digUpM   = const $ callTFuncE "digUp"
-    digDownM = const $ callTFuncE "digDown"
-
 instance Dig ToolSide where 
     dig     side  = tFuncBool "dig" [show $ show side]
     digUp   side  = tFuncBool "digUp" [show $ show side]
     digDown side  = tFuncBool "digDown" [show $ show side]
 
-    digM side     = callTFunc "dig" [show $ show side]
-    digUpM side   = callTFunc "digUp" [show $ show side]
-    digDownM side = callTFunc "digDown" [show $ show side]

@@ -9,9 +9,9 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    selectM 1.0
+    digM ()
 
-    x <- defineLocal "x" getSelectedSlot
+    x <- defineLocal "x" $ dig ()
 
     tPrint x
 

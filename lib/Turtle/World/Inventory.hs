@@ -18,6 +18,9 @@ import Turtle.Control
 select :: NumericTVal num a' => num -> TVal Bool 
 select (showTVal -> slot) = tFuncBool "select" [slot]
 
+selectM :: NumericTVal num a' => num -> Turtle ()
+selectM = turtle . select
+
 -- | Indicates the currently selected inventory slot.
 getSelectedSlot :: TVal Double 
 getSelectedSlot = tFuncDoubleE "getSelectedSlot"
@@ -45,20 +48,14 @@ getItemSpace (showTVal -> slot) = tFuncDouble "getItemSpace" [slot]
 equipLeft :: TVal Bool 
 equipLeft = tFuncBoolE "equipLeft"
 
+equipLeftM :: Turtle ()
+equipLeftM = turtle equipLeft
+
 -- | Attempts to equip an item in the current slot to the turtle's left side, 
 -- switching the previously equipped item back into the inventory.
 equipRight :: TVal Bool 
 equipRight = tFuncBoolE "equipRight"
 
--- | Counts how many items are in the currently selected slot
-
--- Turtle Actions
-
-selectM :: NumericTVal num a' => num -> Turtle ()
-selectM = turtle . select
-
-equipLeftM :: Turtle ()
-equipLeftM = turtle equipLeft
-
 equipRightM :: Turtle ()
 equipRightM = turtle equipRight
+

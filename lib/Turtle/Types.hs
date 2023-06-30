@@ -68,7 +68,7 @@ instance Show (TVal a) where
     show (TTVar x)   = x
     show (TStrVar x) = x
 
-showTVal :: ToTVal a a' => a -> String
+showTVal :: ToTVal any a' => any -> String
 showTVal = show . toTVal
 
 type family NotString (a :: *) :: Constraint where 
@@ -88,34 +88,34 @@ type family TNum (a :: *) :: Constraint where
 type family NumericTVal (a :: *) (b :: *) :: Constraint where 
     NumericTVal a b = (ToTVal a b, TNum b)
 
-applyTOp :: (ToTVal a a', ToTVal b b') => String -> a -> b -> String
+applyTOp :: (ToTVal any1 a', ToTVal any2 b') => String -> any1 -> any2 -> String
 applyTOp op a b = "(" <> showTVal a <> " " <> op <> " " <> showTVal b <> ")"
 
-tAdd :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tAdd :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double 
 tAdd a b = TDouble $ applyTOp "+" a b
 
-tSub :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tSub :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 tSub a b = TDouble $ applyTOp "-" a b
 
-tMul :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tMul :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 tMul a b = TDouble $ applyTOp "*" a b
 
-tDiv :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double 
+tDiv :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 tDiv a b = TDouble $ applyTOp "/" a b
 
-(.+) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.+) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 (.+) = tAdd
 
-(.-) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.-) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 (.-) = tSub
 
-(.*) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(.*) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 (.*) = tMul
 
-(./) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(./) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 (./) = tDiv
 
-(%) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Double
+(%) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
 a % b = TDouble $ applyTOp "%" a b
 
 infixl 6 .+
@@ -144,17 +144,17 @@ type family NonBoolTVal (a :: *) (b :: *) :: Constraint where
     NonBoolTVal a b = (ToTVal a b, NotBool b)
 
 -- String Concatenation
-(...) :: (NonBoolTVal a a', NonBoolTVal b b') => a -> b -> TVal StrVar
+(...) :: (NonBoolTVal any1 a', NonBoolTVal any2 b') => any1 -> any2 -> TVal StrVar
 a ... b = TStrVar $ applyTOp ".." a b
 
 infixr 5 ...
 
 -- Equality operations
 
-(.==) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
+(.==) :: (ToTVal bool1 a', ToTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .== b = TBool $ applyTOp "==" a b
 
-(~=) :: (ToTVal a a', ToTVal b b') => a -> b -> TVal Bool
+(~=) :: (ToTVal bool1 a', ToTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a ~= b = TBool $ applyTOp "~=" a b
 
 infix 4 .==
@@ -162,14 +162,14 @@ infix 4 ~=
 
 -- Comparison operations
 
-(.>) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+(.>) :: (NumericTVal bool1 a', NumericTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .> b = TBool $ applyTOp ">" a b
 
-(.<) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+(.<) :: (NumericTVal bool1 a', NumericTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .< b = TBool $ applyTOp "<" a b
 
-(.>=) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+(.>=) :: (NumericTVal bool1 a', NumericTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .>= b = TBool $ applyTOp ">=" a b
 
-(.<=) :: (NumericTVal a a', NumericTVal b b') => a -> b -> TVal Bool
+(.<=) :: (NumericTVal bool1 a', NumericTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .<= b = TBool $ applyTOp "<=" a b

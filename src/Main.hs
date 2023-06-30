@@ -1,7 +1,7 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
-{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
+--{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+--{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
 module Main (main) where
 

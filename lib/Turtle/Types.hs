@@ -15,6 +15,7 @@ module Turtle.Types ( Turtle
                     , NotString
                     , TruthyTVal
                     , NumericTVal
+                    , StringyTVal
                     , showTVal
                     , tAdd, tSub, tMul, tDiv
                     , (.+), (.-), (.*), (./), (%)
@@ -130,6 +131,14 @@ type family Truthy (a :: *) :: Constraint where
 
 type family TruthyTVal (a :: *) (b :: *) :: Constraint where 
     TruthyTVal a b = (ToTVal a b, Truthy b)
+
+type family Stringy (a :: *) :: Constraint where 
+    Stringy String    = () 
+    Stringy TurtleVar = ()
+    Stringy _         = TypeError ('Text "Not a Stringy Type!")
+
+type family StringyTVal (a :: *) (b :: *) :: Constraint where 
+    StringyTVal a b = (ToTVal a b, Stringy b)
 
 type family NonBoolTVal (a :: *) (b :: *) :: Constraint where 
     NonBoolTVal a b = (ToTVal a b, NotBool b)

@@ -4,6 +4,7 @@ module Turtle ( tPrint
               , module Turtle.Types
               , module Turtle.World
               , module Turtle.Control
+              , module Turtle.Term
               ) where 
 
 import Control.Monad.Writer (execWriter)
@@ -12,6 +13,7 @@ import Turtle.Var
 import Turtle.Types
 import Turtle.World
 import Turtle.Control
+import Turtle.Term
 
 writeProgram :: Turtle a -> FilePath -> IO ()
 writeProgram prog name = writeFile name text 

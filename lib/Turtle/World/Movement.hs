@@ -7,21 +7,27 @@ module Turtle.World.Movement ( moveForward, moveBack, moveUp, moveDown
 import Turtle.Control
 import Turtle.Types
 
+-- | Try to move the turtle forward
 moveForward :: TVal Bool
 moveForward = tFuncBoolE "forward"
 
+-- | Try to move the turtle back
 moveBack :: TVal Bool
 moveBack = tFuncBoolE "back"
 
+-- | Try to move the turtle up
 moveUp :: TVal Bool
 moveUp = tFuncBoolE "up"
 
+-- | Try to move the turtle down
 moveDown :: TVal Bool
 moveDown = tFuncBoolE "down"
 
+-- | Turn the turtle left
 turnLeft :: TVal Bool
 turnLeft = tFuncBoolE "turnLeft"
 
+-- | Turn the turtle right
 turnRight :: TVal Bool
 turnRight = tFuncBoolE "turnRight"
 

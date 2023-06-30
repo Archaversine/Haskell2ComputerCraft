@@ -9,6 +9,7 @@ module Turtle.World.Inventory ( select, selectM
                               , equipLeft, equipLeftM
                               , equipRight, equipRightM
                               , transferTo, transferToM
+                              , transferAllTo, transferAllToM
                               ) where
 
 import Turtle.Types 
@@ -63,9 +64,16 @@ equipRightM = turtle equipRight
 -- | Transfers n items from the selected slot to slot
 transferTo :: (NumericTVal num1 a', NumericTVal num2 b')
            => num1 -> num2 -> TVal Bool 
-transferTo (showTVal -> amount) (showTVal -> to) = do 
-    tFuncBool "transferTo" [amount, to]
+transferTo (showTVal -> amount) (showTVal -> slot) = do 
+    tFuncBool "transferTo" [slot, amount]
 
 transferToM :: (NumericTVal num1 a', NumericTVal num2 b') 
             => num1 -> num2 -> Turtle () 
-transferToM amount to = turtle $ transferTo amount to
+transferToM amount slot = turtle $ transferTo amount slot
+
+-- Transfers all items from the selected slot to slot
+transferAllTo :: NumericTVal num a' => num -> TVal Bool 
+transferAllTo (showTVal -> slot) = tFuncBool "transferTo" [slot]
+
+transferAllToM :: NumericTVal num a' => num -> Turtle ()
+transferAllToM = turtle . transferAllTo

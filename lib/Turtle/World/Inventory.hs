@@ -6,8 +6,8 @@ module Turtle.World.Inventory ( select, selectM
                               , getItemCount
                               , getCurrentItemSpace
                               , getItemSpace
-                              , equipLeft 
-                              , equipRight
+                              , equipLeft, equipLeftM
+                              , equipRight, equipRightM
                               ) where
 
 import Turtle.Types 
@@ -56,3 +56,9 @@ equipRight = tFuncBoolE "equipRight"
 
 selectM :: NumericTVal num a' => num -> Turtle ()
 selectM = turtle . select
+
+equipLeftM :: Turtle ()
+equipLeftM = turtle equipLeft
+
+equipRightM :: Turtle ()
+equipRightM = turtle equipRight

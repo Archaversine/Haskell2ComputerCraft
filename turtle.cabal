@@ -24,6 +24,7 @@ executable turtle
                        Turtle.World.Fuel,
                        Turtle.World.Detect,
                        Turtle.World.Blocks,
+                       Turtle.World.Attack,
                        Turtle.World.Movement,
                        Turtle.World.Inventory,
                        Turtle.Term

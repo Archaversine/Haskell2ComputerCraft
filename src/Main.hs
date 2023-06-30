@@ -8,7 +8,12 @@ module Main (main) where
 import Turtle
 
 prog :: Turtle ()
-prog = pure ()
+prog = do 
+    selectM 1.0
+
+    x <- defineLocal "x" getSelectedSlot
+
+    tPrint x
 
 main :: IO ()
 main = writeProgram prog "prog.lua"

@@ -21,6 +21,8 @@ module Turtle.Control ( tWhile
                       , callTFuncE
                       , tFuncBool 
                       , tFuncBoolE
+                      , tFuncDouble
+                      , tFuncDoubleE
                       , callFunc
                       ) where 
 
@@ -133,6 +135,12 @@ tFuncBool name params = TBool $ tfName name params
 
 tFuncBoolE :: String -> TVal Bool
 tFuncBoolE = flip tFuncBool []
+
+tFuncDouble :: String -> [String] -> TVal Double 
+tFuncDouble name params = TDouble $ tfName name params
+
+tFuncDoubleE :: String -> TVal Double 
+tFuncDoubleE = flip tFuncDouble []
 
 -- Lua Function
 callFunc :: String -> [String] -> Turtle ()

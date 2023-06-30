@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Turtle.World.Fuel (refuel) where 
+module Turtle.World.Fuel (refuel, getFuelLevel, getFuelLimit) where 
 
 import Turtle.Types
 import Turtle.Control
@@ -23,3 +23,11 @@ instance {-# OVERLAPS #-} Refuel () where
 instance NumericTVal num Double => Refuel num where 
     refuel (showTVal -> amount) = callTFunc "refuel" [amount]
 
+-- | Returns the current fuel level of the turtle, this is the number of blocks the turtle can move.
+getFuelLevel :: TVal Double 
+getFuelLevel = tFuncDoubleE "getFuelLevel"
+
+-- | Returns the maximum amount of fuel a turtle can store. 
+-- By default, 20,000 for regular turtles, 100,000 for advanced
+getFuelLimit :: TVal Double 
+getFuelLimit = tFuncDoubleE "getFuelLimit"

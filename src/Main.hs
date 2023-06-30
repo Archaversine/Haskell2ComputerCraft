@@ -9,11 +9,34 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    digM ()
+    term <- wrapTerm
+    monitor <- wrapPeripheral "monitor" MonLeft 
 
-    x <- defineLocal "x" $ dig ()
+    clear monitor 
+    setCursorPos monitor (1.0, 1.0)
+    write monitor "Departing!"
 
-    tPrint x
+    refuel ()
+
+    loopM 10.0 moveForwardM
+
+    clear term
+    setCursorPos term (1.0, 1.0)
+
+    blocks <- defineLocal "blocks" 0.0
+
+    tWhile True $ do 
+        digM ()
+        blocks += 1.0
+        moveForwardM
+
+        tPrint $ "Mined " ... blocks ... " blocks!"
 
 main :: IO ()
-main = writeProgram prog "prog.lua"
+main = do 
+    writeProgram prog "prog.lua"
+
+    putStrLn "Generated Code"
+    putStrLn "============================"
+    printProgram prog
+    putStrLn "============================"

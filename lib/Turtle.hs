@@ -1,5 +1,6 @@
 module Turtle ( tPrint
               , writeProgram
+              , printProgram
               , module Turtle.Var
               , module Turtle.Types
               , module Turtle.World
@@ -18,6 +19,9 @@ import Turtle.Term
 writeProgram :: Turtle a -> FilePath -> IO ()
 writeProgram prog name = writeFile name text 
     where text = execWriter prog 
+
+printProgram :: Turtle a -> IO ()
+printProgram = putStr . execWriter
 
 tPrint :: ToTVal a a' => a -> Turtle ()
 tPrint text = callFunc "print" [showTVal text]

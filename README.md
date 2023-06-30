@@ -44,7 +44,7 @@ prog = do
     refuel () 
 
     -- Define a local variable x
-    x <- defineLocal "x" 0.0
+    x <- defineLocal "x" 0
 
     -- Define a function that digs after a certain action
     let digAfter a = a >> digM ()
@@ -53,7 +53,7 @@ prog = do
     tWhile detectDown $ do 
         -- Increment x
         -- Custom operator defined in Turtle.Var
-        x += 1.0
+        x += 1
 
         -- Dig Actions
         digM () >> digDownM () >> digAfter moveDownM >> moveForwardM >> turnLeftM
@@ -72,24 +72,24 @@ add a b = a .+ b
 
 prog :: Turtle ()
 prog = do 
-    x <- defineLocal "x" 5.0
+    x <- defineLocal "x" 5
 
-    tIfElse (x % 2.0 .== 0.0) $ do 
+    tIfElse (x % 2 .== 0) $ do 
         tPrint "X is even!"
     tElse $ do 
         tPrint "X is odd!"
 
-    mySum <- defineLocal "sum" 0.0
+    mySum <- defineLocal "sum" 0
 
-    forFromToStep "i" (1.0, 10.0, 1.0) $ \i -> do 
+    forFromToStep "i" (1, 10, 1) $ \i -> do 
         mySum += i
 
-    tWhile (mySum .> 0.0) $ do 
-        mySum -= 1.0
+    tWhile (mySum .> 0) $ do 
+        mySum -= 1
         tPrint "Removed 1!"
 
-    y <- defineLocal "y" 1.0 
-    z <- defineLocal "z" 1.0
+    y <- defineLocal "y" 1 
+    z <- defineLocal "z" 1
 
     result <- defineLocal "result" $ add y z
 

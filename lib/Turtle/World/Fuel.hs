@@ -20,6 +20,6 @@ class Refuel a where
 instance {-# OVERLAPS #-} Refuel () where 
     refuel = const $ callTFuncE "refuel"
 
-instance ToTVal a Double => Refuel a where 
+instance NumericTVal num Double => Refuel num where 
     refuel (showTVal -> amount) = callTFunc "refuel" [amount]
 

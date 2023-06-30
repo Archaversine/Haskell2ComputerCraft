@@ -13,21 +13,21 @@ prog = do
     monitor <- wrapPeripheral "monitor" MonLeft 
 
     clear monitor 
-    setCursorPos monitor (1.0, 1.0)
+    setCursorPos monitor (1, 1)
     write monitor "Departing!"
 
     refuel ()
 
-    loopM 10.0 moveForwardM
+    loopM 10 moveForwardM
 
     clear term
-    setCursorPos term (1.0, 1.0)
+    setCursorPos term (1, 1)
 
-    blocks <- defineLocal "blocks" 0.0
+    blocks <- defineLocal "blocks" 0
 
     tWhile True $ do 
         digM ()
-        blocks += 1.0
+        blocks += 1
         moveForwardM
 
         tPrint $ "Mined " ... blocks ... " blocks!"

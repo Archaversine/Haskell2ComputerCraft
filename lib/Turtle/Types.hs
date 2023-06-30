@@ -11,12 +11,14 @@
 module Turtle.Types ( Turtle
                     , TurtleVar(..)
                     , TVal(..)
+                    , Number
                     , ToTVal(..)
                     , NotString
                     , TruthyTVal
                     , NumericTVal
                     , StringyTVal
                     , showTVal
+                    , fromFractional
                     , tAdd, tSub, tMul, tDiv
                     , (.+), (.-), (.*), (./), (%)
                     , (...)
@@ -36,8 +38,10 @@ newtype TurtleVar = TurtleVar String
 class ToTVal a b | a -> b where 
     toTVal :: a -> TVal b
 
-instance ToTVal Double Double where 
-    toTVal = TDouble . show
+type Number = Integer
+
+instance ToTVal Number Number where 
+    toTVal = TNumber . show
 
 instance ToTVal Bool Bool where 
     toTVal True = TBool "true"
@@ -55,14 +59,14 @@ instance ToTVal (TVal a) a where
 data StrVar
 
 data TVal a where 
-    TDouble :: String -> TVal Double
+    TNumber :: String -> TVal Number
     TBool   :: String -> TVal Bool
     TStr    :: String -> TVal String
     TTVar   :: String -> TVal TurtleVar
     TStrVar :: String -> TVal StrVar
 
 instance Show (TVal a) where 
-    show (TDouble x) = x
+    show (TNumber x) = x
     show (TBool x)   = x
     show (TStr x)    = show x
     show (TTVar x)   = x
@@ -70,6 +74,9 @@ instance Show (TVal a) where
 
 showTVal :: ToTVal any a' => any -> String
 showTVal = show . toTVal
+
+fromFractional :: (Show a, Fractional a) => a -> TVal Number
+fromFractional x = TNumber $ show x
 
 type family NotString (a :: *) :: Constraint where 
     NotString String = TypeError ('Text "Type cannot be a String or StrVar!")
@@ -81,7 +88,7 @@ type family NotBool (a :: *) :: Constraint where
     NotBool _    = ()
 
 type family TNum (a :: *) :: Constraint where 
-    TNum Double    = () 
+    TNum Number    = () 
     TNum TurtleVar = () 
     TNum _         = TypeError ('Text "Type must be a TNum type")
 
@@ -91,32 +98,32 @@ type family NumericTVal (a :: *) (b :: *) :: Constraint where
 applyTOp :: (ToTVal any1 a', ToTVal any2 b') => String -> any1 -> any2 -> String
 applyTOp op a b = "(" <> showTVal a <> " " <> op <> " " <> showTVal b <> ")"
 
-tAdd :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double 
-tAdd a b = TDouble $ applyTOp "+" a b
+tAdd :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
+tAdd a b = TNumber $ applyTOp "+" a b
 
-tSub :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
-tSub a b = TDouble $ applyTOp "-" a b
+tSub :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
+tSub a b = TNumber $ applyTOp "-" a b
 
-tMul :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
-tMul a b = TDouble $ applyTOp "*" a b
+tMul :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
+tMul a b = TNumber $ applyTOp "*" a b
 
-tDiv :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
-tDiv a b = TDouble $ applyTOp "/" a b
+tDiv :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
+tDiv a b = TNumber $ applyTOp "/" a b
 
-(.+) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
+(.+) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
 (.+) = tAdd
 
-(.-) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
+(.-) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
 (.-) = tSub
 
-(.*) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
+(.*) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
 (.*) = tMul
 
-(./) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
+(./) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
 (./) = tDiv
 
-(%) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Double
-a % b = TDouble $ applyTOp "%" a b
+(%) :: (NumericTVal num1 a', NumericTVal num2 b') => num1 -> num2 -> TVal Number
+a % b = TNumber $ applyTOp "%" a b
 
 infixl 6 .+
 infixl 6 .-

@@ -137,8 +137,8 @@ setTextColor :: NumericTVal num a' => TermType any -> num -> Turtle ()
 setTextColor device (showTVal -> color) = callTermFunc device "setTextColor" [color]
 
 -- | Returns the current text color of the terminal.
-getTextColor :: TermType any -> TVal Double
-getTextColor device = TDouble $ show device <> "getTextColor()"
+getTextColor :: TermType any -> TVal Number
+getTextColor device = TNumber $ show device <> "getTextColor()"
 
 -- | Sets the background color of the terminal.
 -- Limited functionality without an advanced Computer / Turtle / Monitor
@@ -146,8 +146,8 @@ setBackgroundColor :: NumericTVal num a' => TermType any -> num -> Turtle ()
 setBackgroundColor device (showTVal -> color) = callTermFunc device "setBackgroundColor" [color]
 
 -- | Returns the current background color of the terminal 
-getBackgroundColor :: TermType any -> TVal Double 
-getBackgroundColor device = TDouble $ show device <> "getBackgroundColor()"
+getBackgroundColor :: TermType any -> TVal Number 
+getBackgroundColor device = TNumber $ show device <> "getBackgroundColor()"
 
 -- | Sets the text scale. 
 -- Available only to Monitor Objects.

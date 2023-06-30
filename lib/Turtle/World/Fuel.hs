@@ -20,14 +20,14 @@ class Refuel a where
 instance {-# OVERLAPS #-} Refuel () where 
     refuel = const $ callTFuncE "refuel"
 
-instance NumericTVal num Double => Refuel num where 
+instance NumericTVal num a' => Refuel num where 
     refuel (showTVal -> amount) = callTFunc "refuel" [amount]
 
 -- | Returns the current fuel level of the turtle, this is the number of blocks the turtle can move.
-getFuelLevel :: TVal Double 
-getFuelLevel = tFuncDoubleE "getFuelLevel"
+getFuelLevel :: TVal Number
+getFuelLevel = tFuncNumberE "getFuelLevel"
 
 -- | Returns the maximum amount of fuel a turtle can store. 
 -- By default, 20,000 for regular turtles, 100,000 for advanced
-getFuelLimit :: TVal Double 
-getFuelLimit = tFuncDoubleE "getFuelLimit"
+getFuelLimit :: TVal Number
+getFuelLimit = tFuncNumberE "getFuelLimit"

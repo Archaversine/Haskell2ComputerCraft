@@ -24,24 +24,24 @@ selectM :: NumericTVal num a' => num -> Turtle ()
 selectM = turtle . select
 
 -- | Indicates the currently selected inventory slot.
-getSelectedSlot :: TVal Double 
-getSelectedSlot = tFuncDoubleE "getSelectedSlot"
+getSelectedSlot :: TVal Number
+getSelectedSlot = tFuncNumberE "getSelectedSlot"
 
 -- | Counts how many items are in the currently selected item slot.
-getCurrentItemCount :: TVal Double 
-getCurrentItemCount = tFuncDoubleE "getItemCount"
+getCurrentItemCount :: TVal Number 
+getCurrentItemCount = tFuncNumberE "getItemCount"
 
 -- | Counts how many items are in the specified item slot.
-getItemCount :: NumericTVal num a' => num -> TVal Double 
-getItemCount (showTVal -> slot) = tFuncDouble "getItemCount" [slot]
+getItemCount :: NumericTVal num a' => num -> TVal Number
+getItemCount (showTVal -> slot) = tFuncNumber "getItemCount" [slot]
 
 -- | Counts how many remaining items you need to fill the stack in the currently selected item slot.
-getCurrentItemSpace :: TVal Double 
-getCurrentItemSpace = tFuncDoubleE "getItemSpace"
+getCurrentItemSpace :: TVal Number
+getCurrentItemSpace = tFuncNumberE "getItemSpace"
  
 -- | Counts how many remaining items you need to fill the stack in the specified item slot.
-getItemSpace :: NumericTVal num a' => num -> TVal Double 
-getItemSpace (showTVal -> slot) = tFuncDouble "getItemSpace" [slot]
+getItemSpace :: NumericTVal num a' => num -> TVal Number
+getItemSpace (showTVal -> slot) = tFuncNumber "getItemSpace" [slot]
 
 -- TODO: Add getItemDetail
 

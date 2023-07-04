@@ -4,6 +4,7 @@
 
 module Turtle.World.Blocks ( ToolSide(..)
                            , Dig(..) 
+                           , InspectData(..)
                            , place, placeM 
                            , placeSign, placeSignM
                            , placeUp, placeUpM
@@ -11,6 +12,9 @@ module Turtle.World.Blocks ( ToolSide(..)
                            , detect 
                            , detectUp 
                            , detectDown
+                           , inspect
+                           , inspectUp
+                           , inspectDown
                            , compareFront 
                            , compareUp 
                            , compareDown
@@ -21,6 +25,8 @@ module Turtle.World.Blocks ( ToolSide(..)
                            , suckUp, suckUpM
                            , suckDown, suckDownM
                            ) where 
+
+import Control.Monad.Writer (tell)
 
 import Turtle.Types
 import Turtle.Control
@@ -107,8 +113,25 @@ detectDown :: TVal Bool
 detectDown = tFuncBoolE "detectDown"
 
 -- TODO: Add inspect
--- TODO: Add inspectUp
--- TODO: Add inspectDown
+
+data InspectData = InspectData { inspectName :: TVal TurtleVar
+                               , inspectMeta :: TVal TurtleVar 
+                               } deriving Show
+
+inspect :: (String, String) -> Turtle InspectData 
+inspect (a, b) = do 
+        tell   $ "local " <> a <> ", " <> b <> " = turtle.inspect()\n"
+        return $ InspectData (TTVar a) (TTVar b)
+
+inspectUp :: (String, String) -> Turtle InspectData
+inspectUp (a, b) = do 
+        tell   $ "local " <> a <> ", " <> b <> " = turtle.inspectUp()\n"
+        return $ InspectData (TTVar a) (TTVar b)
+
+inspectDown :: (String, String) -> Turtle InspectData
+inspectDown (a, b) = do 
+        tell   $ "local " <> a <> ", " <> b <> " = turtle.inspectDown()\n"
+        return $ InspectData (TTVar a) (TTVar b)
 
 -- | Detects if the block in front is the same as the one in the currently selected slot.
 compareFront :: TVal Bool 

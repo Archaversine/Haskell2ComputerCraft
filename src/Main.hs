@@ -9,28 +9,10 @@ import Turtle
 
 prog :: Turtle ()
 prog = do 
-    term <- wrapTerm
-    monitor <- wrapPeripheral "monitor" MonLeft 
+    (InspectData name meta) <- inspect ("name", "meta")
 
-    clear monitor 
-    setCursorPos monitor (1, 1)
-    write monitor "Departing!"
-
-    refuel ()
-
-    loopM 10 moveForwardM
-
-    clear term
-    setCursorPos term (1, 1)
-
-    blocks <- defineLocal "blocks" 0
-
-    tWhile True $ do 
-        digM ()
-        blocks += 1
-        moveForwardM
-
-        tPrint $ "Mined " ... blocks ... " blocks!"
+    tPrint $ "Block name: " ... name
+    tPrint $ "Block meta: " ... meta
 
 main :: IO ()
 main = do 

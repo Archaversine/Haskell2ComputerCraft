@@ -8,11 +8,7 @@ module Main (main) where
 import Turtle
 
 prog :: Turtle ()
-prog = do 
-    (InspectData name meta) <- inspect ("name", "meta")
-
-    tPrint $ "Block name: " ... name
-    tPrint $ "Block meta: " ... meta
+prog = pure ()
 
 main :: IO ()
 main = do 

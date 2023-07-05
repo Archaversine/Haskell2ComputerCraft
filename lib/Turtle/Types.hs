@@ -1,6 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE StarIsType #-}
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -25,6 +26,7 @@ module Turtle.Types ( Turtle
                     , (...)
                     , (.==), (~=)
                     , (.>), (.<), (.>=), (.<=)
+                    , tNot, tAnd, tOr
                     ) where
 
 import Control.Monad.Writer
@@ -181,3 +183,14 @@ a .>= b = TBool $ applyTOp ">=" a b
 
 (.<=) :: (NumericTVal bool1 a', NumericTVal bool2 b') => bool1 -> bool2 -> TVal Bool
 a .<= b = TBool $ applyTOp "<=" a b
+
+-- Logical comparison operations
+
+tNot :: TruthyTVal bool a' => bool -> TVal Bool
+tNot (showTVal -> x) = TBool $ "not " <> x
+
+tAnd :: (TruthyTVal bool1 a', TruthyTVal bool2 b') => bool1 -> bool2 -> TVal Bool
+tAnd a b = TBool $ applyTOp "and" a b
+
+tOr :: (TruthyTVal bool1 a', TruthyTVal bool2 b') => bool1 -> bool2 -> TVal Bool 
+tOr a b = TBool $ applyTOp "or" a b

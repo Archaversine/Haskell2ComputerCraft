@@ -7,6 +7,7 @@ module Turtle.Control ( tWhile
                       , forFromTo
                       , forFromToStep
                       , forBreak
+                      , forContinue
                       , tIf
                       , tIfElse
                       , tElseIf
@@ -72,6 +73,9 @@ forFromToStep var (from, to, step) code = do
 
 forBreak :: Turtle ()
 forBreak = tell "break\n"
+
+forContinue :: Turtle ()
+forContinue = tell "continue\n"
 
 tIf :: TruthyTVal a a' => a -> Turtle _ -> Turtle ()
 tIf cond code = do 

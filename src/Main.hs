@@ -8,12 +8,11 @@ module Main (main) where
 import Turtle
 
 prog :: Turtle ()
-prog = do 
-    (ret, blockData) <- inspectDown ("ret", "blockData")
+prog = tWhile True $ do 
+    (ret, blockData) <- inspect ("ret", "blockData")
 
-    tIf ret $ do 
-        tPrint $ "Block Name: " ... blockName blockData
-        tPrint $ "Block meta: " ... blockMetadata blockData
+    tIf (ret `tAnd` (blockName blockData .== "ae2:quartz_cluster")) $ do 
+        digM ()
 
 main :: IO ()
 main = do 

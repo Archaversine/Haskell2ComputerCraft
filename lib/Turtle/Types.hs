@@ -159,10 +159,10 @@ infixr 5 ...
 
 -- Equality operations
 
-(.==) :: (ToTVal bool1 a', ToTVal bool2 b') => bool1 -> bool2 -> TVal Bool
+(.==) :: (ToTVal any1 a', ToTVal any2 b') => any1 -> any2 -> TVal Bool
 a .== b = TBool $ applyTOp "==" a b
 
-(~=) :: (ToTVal bool1 a', ToTVal bool2 b') => bool1 -> bool2 -> TVal Bool
+(~=) :: (ToTVal any1 a', ToTVal any2 b') => any1 -> any2 -> TVal Bool
 a ~= b = TBool $ applyTOp "~=" a b
 
 infix 4 .==

@@ -24,6 +24,8 @@ module Turtle.Control ( tWhile
                       , tFuncNumber
                       , tFuncNumberE
                       , callFunc
+                      , fName 
+                      , tfName
                       ) where 
 
 import Control.Monad

@@ -4,6 +4,7 @@
 
 module Turtle.World.Blocks ( ToolSide(..)
                            , Dig(..) 
+                           , BlockData(..)
                            , place, placeM 
                            , placeSign, placeSignM
                            , placeUp, placeUpM
@@ -11,6 +12,9 @@ module Turtle.World.Blocks ( ToolSide(..)
                            , detect 
                            , detectUp 
                            , detectDown
+                           , inspect
+                           , inspectUp
+                           , inspectDown
                            , compareFront 
                            , compareUp 
                            , compareDown
@@ -22,8 +26,10 @@ module Turtle.World.Blocks ( ToolSide(..)
                            , suckDown, suckDownM
                            ) where 
 
+import Control.Monad.Writer (tell)
+
 import Turtle.Types
-import Turtle.Control
+import Turtle.Control 
 
 data ToolSide = LeftSide | RightSide
 
@@ -107,6 +113,34 @@ detectDown :: TVal Bool
 detectDown = tFuncBoolE "detectDown"
 
 -- TODO: Add inspect functions
+
+data BlockData = BlockData { blockName :: TVal StrVar, blockMetadata :: TVal Number }
+
+createBlockData :: String -> BlockData
+createBlockData varname = BlockData name metadata
+    where name     = TStrVar $ varname <> ".name"
+          metadata = TNumber $ varname <> ".metadata"
+
+inspect :: (String, String) -> Turtle (TVal Bool, BlockData)
+inspect (retName, dataName) = do 
+    let name = tfName "inspect" []
+
+    tell $ "local " <> retName <> ", " <> dataName <> " = " <> name <> "\n"
+    return (TBool retName, createBlockData dataName)
+
+inspectUp :: (String, String) -> Turtle (TVal Bool, BlockData) 
+inspectUp (retName, dataName) = do 
+    let name = tfName "inspectUp" []
+
+    tell $ "local " <> retName <> ", " <> dataName <> " = " <> name <> "\n"
+    return (TBool retName, createBlockData dataName)
+
+inspectDown :: (String, String) -> Turtle (TVal Bool, BlockData)
+inspectDown (retName, dataName) = do 
+    let name = tfName "inspectDown" []
+
+    tell $ "local " <> retName <> ", " <> dataName <> " = " <> name <> "\n"
+    return (TBool retName, createBlockData dataName)
 
 -- | Detects if the block in front is the same as the one in the currently selected slot.
 compareFront :: TVal Bool 

@@ -11,6 +11,7 @@
 module Turtle.Types ( Turtle
                     , TurtleVar(..)
                     , TVal(..)
+                    , StrVar
                     , Number
                     , ToTVal(..)
                     , NotString
